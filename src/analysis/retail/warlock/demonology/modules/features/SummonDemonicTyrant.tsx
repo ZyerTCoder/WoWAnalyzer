@@ -25,6 +25,11 @@ import EmbeddedTimelineContainer, {
   SpellTimeline,
 } from 'interface/report/Results/Timeline/EmbeddedTimeline';
 import SpellUsable from 'parser/shared/modules/SpellUsable';
+import {
+  ComparisonStat,
+  HasComparisonStat,
+  RELEVANCE_CATEGORY,
+} from '../../comparisonStats/comparisonStatsInterface';
 
 const debug = false;
 
@@ -44,7 +49,7 @@ interface TyrantCast {
   gfgOnCd: boolean;
 }
 
-class SummonDemonicTyrant extends Analyzer {
+class SummonDemonicTyrant extends Analyzer implements HasComparisonStat {
   static dependencies = {
     demoPets: DemoPets,
     spellUsable: SpellUsable,
@@ -477,6 +482,22 @@ class SummonDemonicTyrant extends Analyzer {
         </BoringSpellValueText>
       </Statistic>
     );
+  }
+
+  get comparisonStat(): ComparisonStat[] {
+    const data: ComparisonStat[] = [
+      {
+        name: 'Total Tyrant Casts',
+        value: this.tyrantsCast,
+        relevance: RELEVANCE_CATEGORY.CORE,
+      },
+      {
+        name: 'Total Demons Empowered',
+        value: Number(this.populatedEmpoweredDemonsTable[0]['Total']),
+        relevance: RELEVANCE_CATEGORY.CORE,
+      },
+    ];
+    return data;
   }
 }
 
