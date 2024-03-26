@@ -66,7 +66,7 @@ function ComparisonStatsTable({ modules }: GuideProps<typeof CombatLogParser>) {
               <th style={{ width: '25px' }} />
               <th style={{ width: '20%' }}>Statistic</th>
               <th style={{ width: '20%' }}>Your performance</th>
-              <th>Top performancers</th>
+              <th>Average top performance</th>
             </tr>
             {entries(stats)}
           </tbody>
