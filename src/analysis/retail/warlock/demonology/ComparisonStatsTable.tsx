@@ -7,44 +7,81 @@ import {
 import { Icon } from 'interface';
 import CastEfficiency from 'parser/shared/modules/CastEfficiency';
 import TALENTS from 'common/TALENTS/warlock';
+import Combatant from 'parser/core/Combatant';
 
 const tempTopValues: { [key: string]: number } = {
-  'Total Tyrant Casts': 4,
-  'Total Demons Empowered': 14,
+  'Summon Demonic Tyrantcasts': 4,
+  'Summon Demonic Tyrantdemons empowered': 14,
   'Call Dreadstalkers efficiency': 50,
+  'Bilescourge Bombers efficiency': 65,
+  'Bilescourge Bombers casts': 10,
 };
 
-function TempAddExtraAbilities(stats: ComparisonStat[]) {
-  const castEffic = useAnalyzer(CastEfficiency)!.getCastEfficiencyForSpell(
+function TempAddExtraAbilities(stats: ComparisonStat[], combatant: Combatant) {
+  let castEffic = useAnalyzer(CastEfficiency)!.getCastEfficiencyForSpell(
     TALENTS.CALL_DREADSTALKERS_TALENT,
   )!;
+  if (combatant.hasTalent(TALENTS.CALL_DREADSTALKERS_TALENT)) {
+    stats.push({
+      icon: TALENTS.CALL_DREADSTALKERS_TALENT.icon,
+      name: TALENTS.CALL_DREADSTALKERS_TALENT.name,
+      sort: 2,
+      first: {
+        name: ' casts',
+        value: castEffic.casts,
+        valueDesignator: ' casts',
+      },
+      second: {
+        name: ' efficiency',
+        value: Number((castEffic.efficiency! * 100).toFixed(0)),
+        valueDesignator: '% efficiency',
+      },
+    });
+  }
 
-  stats.push({
-    icon: TALENTS.CALL_DREADSTALKERS_TALENT.icon,
-    name: TALENTS.CALL_DREADSTALKERS_TALENT.name + ' casts',
-    value: castEffic.casts,
-    valueDesignator: ' casts',
-    sort: 2,
-  });
-  stats.push({
-    icon: TALENTS.CALL_DREADSTALKERS_TALENT.icon,
-    name: TALENTS.CALL_DREADSTALKERS_TALENT.name + ' efficiency',
-    value: Number((castEffic.efficiency! * 100).toFixed(0)),
-    valueDesignator: '%',
-    sort: 2,
-  });
+  castEffic = useAnalyzer(CastEfficiency)!.getCastEfficiencyForSpell(
+    TALENTS.BILESCOURGE_BOMBERS_TALENT,
+  )!;
+  if (combatant.hasTalent(TALENTS.BILESCOURGE_BOMBERS_TALENT)) {
+    stats.push({
+      icon: TALENTS.BILESCOURGE_BOMBERS_TALENT.icon,
+      name: TALENTS.BILESCOURGE_BOMBERS_TALENT.name,
+      sort: 2,
+      first: {
+        name: ' casts',
+        value: castEffic.casts,
+        valueDesignator: ' casts',
+      },
+      second: {
+        name: ' efficiency',
+        value: Number((castEffic.efficiency! * 100).toFixed(0)),
+        valueDesignator: '% efficiency',
+      },
+    });
+  }
 
   return stats;
 }
 
 function entries(stats: ComparisonStat[]) {
   return stats.map((stat) => {
-    let perfPercent = 0;
-    let perfColor = '#70b570';
-    if (stat.top) {
-      const under = stat.value < stat.top;
-      under ? (perfPercent = stat.value / stat.top) : (perfPercent = stat.top / stat.value);
-      perfPercent < 0.8 ? (perfColor = '#ff8000') : (perfColor = '#70b570');
+    let firstPerfPercent = 0;
+    let firstPerfColor = '#70b570';
+    if (stat.first.top) {
+      const under = stat.first.value < stat.first.top;
+      under
+        ? (firstPerfPercent = stat.first.value / stat.first.top)
+        : (firstPerfPercent = stat.first.top / stat.first.value);
+      firstPerfPercent < 0.8 ? (firstPerfColor = '#ff8000') : (firstPerfColor = '#70b570');
+    }
+    let secondPerfPercent = 0;
+    let secondPerfColor = '#70b570';
+    if (stat.second.top) {
+      const under = stat.second.value < stat.second.top;
+      under
+        ? (secondPerfPercent = stat.second.value / stat.second.top)
+        : (secondPerfPercent = stat.second.top / stat.second.value);
+      secondPerfPercent < 0.8 ? (secondPerfColor = '#ff8000') : (secondPerfColor = '#70b570');
     }
 
     return (
@@ -53,13 +90,17 @@ function entries(stats: ComparisonStat[]) {
           <Icon icon={stat.icon}></Icon>
         </td>
         <td style={{ width: '20%' }}>{stat.name}</td>
-        <td style={{ width: '20%' }}>
-          {stat.value}
-          {stat.valueDesignator}
+        <td style={{ width: '8%' }}>
+          {stat.first.value}
+          {stat.first.valueDesignator}
         </td>
-        {!stat.top ? (
+        <td style={{ width: '10%' }}>
+          {stat.second.value}
+          {stat.second.valueDesignator}
+        </td>
+        {!stat.first.top ? (
           <>
-            <td>No top performer data available</td>
+            <td>No top performer data</td>
             <td />
           </>
         ) : (
@@ -69,15 +110,39 @@ function entries(stats: ComparisonStat[]) {
                 <div
                   className="flex-sub performance-bar"
                   style={{
-                    width: `${perfPercent * 100}%`,
-                    backgroundColor: perfColor,
+                    width: `${firstPerfPercent * 100}%`,
+                    backgroundColor: firstPerfColor,
                   }}
                 />
               </div>
             </td>
             <td>
-              {stat.top}
-              {stat.valueDesignator}
+              {stat.first.top}
+              {stat.first.valueDesignator}
+            </td>
+          </>
+        )}
+        {!stat.second.top ? (
+          <>
+            <td>No top performer data</td>
+            <td />
+          </>
+        ) : (
+          <>
+            <td style={{ width: '20%' }}>
+              <div className="flex performance-bar-container">
+                <div
+                  className="flex-sub performance-bar"
+                  style={{
+                    width: `${secondPerfPercent * 100}%`,
+                    backgroundColor: secondPerfColor,
+                  }}
+                />
+              </div>
+            </td>
+            <td>
+              {stat.second.top}
+              {stat.second.valueDesignator}
             </td>
           </>
         )}
@@ -86,7 +151,7 @@ function entries(stats: ComparisonStat[]) {
   });
 }
 
-function ComparisonStatsTable({ modules }: GuideProps<typeof CombatLogParser>) {
+function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof CombatLogParser>) {
   let stats: ComparisonStat[] = [];
   Object.values(modules).forEach((module) => {
     if (instanceOfComparisonStat(module)) {
@@ -94,11 +159,12 @@ function ComparisonStatsTable({ modules }: GuideProps<typeof CombatLogParser>) {
     }
   });
 
-  stats = TempAddExtraAbilities(stats);
+  stats = TempAddExtraAbilities(stats, info.combatant);
 
   stats.sort((a, b) => a.sort - b.sort);
   stats.forEach((stat) => {
-    stat.top = tempTopValues[stat.name];
+    stat.first.top = tempTopValues[stat.name + stat.first.name];
+    stat.second.top = tempTopValues[stat.name + stat.second.name];
   });
 
   return (
@@ -113,9 +179,9 @@ function ComparisonStatsTable({ modules }: GuideProps<typeof CombatLogParser>) {
           <tbody>
             <tr>
               <th style={{ width: '25px' }} />
-              <th style={{ width: '20%' }}>Statistic</th>
-              <th style={{ width: '20%' }}>Your performance</th>
-              <th>Average top performance</th>
+              <th style={{ width: '15%' }}>Statistic</th>
+              <th colSpan={2}>Your performance</th>
+              <th colSpan={4}>Average top performance</th>
             </tr>
             {entries(stats)}
           </tbody>
@@ -123,9 +189,17 @@ function ComparisonStatsTable({ modules }: GuideProps<typeof CombatLogParser>) {
       </div>
       <br />
       <br />
-      {JSON.stringify(stats.map((stat) => [stat.name, stat.value]))}
+      {getStatsString(stats)}
     </Section>
   );
+}
+
+function getStatsString(stats: ComparisonStat[]) {
+  const out: (string | number)[][] = [];
+  stats.forEach((stat) => out.push([stat.name + stat.first.name, stat.first.value]));
+  stats.forEach((stat) => out.push([stat.name + stat.second.name, stat.second.value]));
+  console.error(out);
+  return JSON.stringify(out);
 }
 
 export default ComparisonStatsTable;

@@ -1,10 +1,19 @@
 export interface ComparisonStat {
   icon: string;
-  name: string;
-  value: number;
-  valueDesignator: string;
   sort: number;
-  top?: number;
+  name: string;
+  first: {
+    name: string;
+    value: number;
+    valueDesignator: string;
+    top?: number;
+  };
+  second: {
+    name: string;
+    value: number;
+    valueDesignator: string;
+    top?: number;
+  };
 }
 
 export interface HasComparisonStat {
