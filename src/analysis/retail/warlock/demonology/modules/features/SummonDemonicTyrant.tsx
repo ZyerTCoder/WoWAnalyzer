@@ -489,11 +489,13 @@ class SummonDemonicTyrant extends Analyzer implements HasComparisonStat {
       {
         name: 'Total Tyrant Casts',
         value: this.tyrantsCast,
+        valueDesignator: 'casts',
         relevance: RELEVANCE_CATEGORY.CORE,
       },
       {
         name: 'Total Demons Empowered',
         value: Number(this.populatedEmpoweredDemonsTable[0]['Total']),
+        valueDesignator: 'demons',
         relevance: RELEVANCE_CATEGORY.CORE,
       },
     ];

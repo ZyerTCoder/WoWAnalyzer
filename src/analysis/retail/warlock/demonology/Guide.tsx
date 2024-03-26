@@ -4,15 +4,12 @@ import PreparationSection from 'interface/guide/components/Preparation/Preparati
 import CooldownSubsection from './modules/guide/CooldownsSubsection';
 import ResourceUsage from './modules/guide/ResourceUsage';
 import DefensivesGuide from '../shared/Defensives';
-import {
-  ComparisonStat,
-  instanceOfComparisonStat,
-} from './comparisonStats/comparisonStatsInterface';
+import ComparisonStatsTable from './ComparisonStatsTable';
 
 export default function Guide({ modules, events, info }: GuideProps<typeof CombatLogParser>) {
   return (
     <>
-      <TempStatsTest modules={modules} events={events} info={info} />
+      <ComparisonStatsTable modules={modules} events={events} info={info} />
       <CooldownSection modules={modules} events={events} info={info} />
       <DefensivesGuide modules={modules} events={events} info={info} />
       <ResourceUsage modules={modules} events={events} info={info} />
@@ -28,16 +25,4 @@ function CooldownSection({ modules }: GuideProps<typeof CombatLogParser>) {
       {modules.summonDemonicTyrant.guideSubsection}
     </Section>
   );
-}
-
-function TempStatsTest({ modules }: GuideProps<typeof CombatLogParser>) {
-  let stats: ComparisonStat[] = [];
-  console.error(typeof modules);
-  Object.values(modules).forEach((module) => {
-    if (instanceOfComparisonStat(module)) {
-      console.error('found a module with comparison stat', module);
-      stats = stats.concat(module.comparisonStat);
-    }
-  });
-  return <Section title="Test">{JSON.stringify(stats)}</Section>;
 }

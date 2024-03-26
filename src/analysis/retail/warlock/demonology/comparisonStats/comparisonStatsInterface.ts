@@ -1,6 +1,7 @@
 export interface ComparisonStat {
   name: string;
   value: string | number;
+  valueDesignator: string;
   relevance: RELEVANCE_CATEGORY;
 }
 
