@@ -16,8 +16,12 @@ import STATISTIC_ORDER from 'parser/ui/STATISTIC_ORDER';
 import Statistic from 'parser/ui/Statistic';
 import StatisticBar from 'parser/ui/StatisticBar';
 import UptimeBar from 'parser/ui/UptimeBar';
+import {
+  ComparisonStat,
+  HasComparisonStat,
+} from '../../../comparisonStats/comparisonStatsInterface';
 
-class T31AmirdrassilDemonology extends Analyzer {
+class T31AmirdrassilDemonology extends Analyzer implements HasComparisonStat {
   static dependencies = {
     enemies: Enemies,
   };
@@ -200,6 +204,42 @@ class T31AmirdrassilDemonology extends Analyzer {
         </Statistic>
       </>
     );
+  }
+
+  get comparisonStat(): ComparisonStat[] {
+    const data: ComparisonStat[] = [
+      {
+        icon: SPELLS.DOOM_BRAND_DEBUFF.icon,
+        name: SPELLS.DOOM_BRAND_DEBUFF.name,
+        sort: 4,
+        first: {
+          name: ' exploded',
+          value: this.doomBrand.removeBuffCount,
+          valueDesignator: ' explosions',
+        },
+        second: {
+          name: ' uptime',
+          value: Number((this.doomBrandUptime * 100).toFixed(0)),
+          valueDesignator: '% uptime',
+        },
+      },
+      {
+        icon: SPELLS.DOOMFIEND_SUMMON.icon,
+        name: SPELLS.DOOMFIEND_SUMMON.name,
+        sort: 4,
+        first: {
+          name: ' exploded',
+          value: this.doomfiend.summons,
+          valueDesignator: ' summons',
+        },
+        second: {
+          name: ' uptime',
+          value: Number(this.doomfiendHitsPerVolley.toFixed(1)),
+          valueDesignator: ' bolts/volley',
+        },
+      },
+    ];
+    return data;
   }
 }
 

@@ -90,7 +90,7 @@ function entries(stats: ComparisonStat[]) {
           <Icon icon={stat.icon}></Icon>
         </td>
         <td style={{ width: '20%' }}>{stat.name}</td>
-        <td style={{ width: '8%' }}>
+        <td style={{ width: '10%' }}>
           {stat.first.value}
           {stat.first.valueDesignator}
         </td>
@@ -105,7 +105,7 @@ function entries(stats: ComparisonStat[]) {
           </>
         ) : (
           <>
-            <td style={{ width: '20%' }}>
+            <td style={{ width: '15%' }}>
               <div className="flex performance-bar-container">
                 <div
                   className="flex-sub performance-bar"
@@ -129,7 +129,7 @@ function entries(stats: ComparisonStat[]) {
           </>
         ) : (
           <>
-            <td style={{ width: '20%' }}>
+            <td style={{ width: '15%' }}>
               <div className="flex performance-bar-container">
                 <div
                   className="flex-sub performance-bar"
