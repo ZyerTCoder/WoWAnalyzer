@@ -1,8 +1,10 @@
 export interface ComparisonStat {
+  icon: string;
   name: string;
-  value: string | number;
+  value: number;
   valueDesignator: string;
   relevance: RELEVANCE_CATEGORY;
+  top?: number;
 }
 
 export interface HasComparisonStat {

@@ -487,12 +487,14 @@ class SummonDemonicTyrant extends Analyzer implements HasComparisonStat {
   get comparisonStat(): ComparisonStat[] {
     const data: ComparisonStat[] = [
       {
+        icon: SPELLS.SUMMON_DEMONIC_TYRANT.icon,
         name: 'Total Tyrant Casts',
         value: this.tyrantsCast,
         valueDesignator: 'casts',
         relevance: RELEVANCE_CATEGORY.CORE,
       },
       {
+        icon: SPELLS.SUMMON_DEMONIC_TYRANT.icon,
         name: 'Total Demons Empowered',
         value: Number(this.populatedEmpoweredDemonsTable[0]['Total']),
         valueDesignator: 'demons',
