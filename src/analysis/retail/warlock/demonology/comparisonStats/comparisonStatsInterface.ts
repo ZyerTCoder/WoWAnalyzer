@@ -3,13 +3,11 @@ export interface ComparisonStat {
   sort: number;
   name: string;
   first: {
-    name: string;
     value: number;
     valueDesignator: string;
     top?: number;
   };
-  second: {
-    name: string;
+  second?: {
     value: number;
     valueDesignator: string;
     top?: number;

@@ -487,12 +487,10 @@ class SummonDemonicTyrant extends Analyzer implements HasComparisonStat {
         name: SPELLS.SUMMON_DEMONIC_TYRANT.name,
         sort: 1,
         first: {
-          name: 'casts',
           value: this.tyrantsCast,
           valueDesignator: ' casts',
         },
         second: {
-          name: 'demons empowered',
           value: Number(this.populatedEmpoweredDemonsTable[0]['Total']),
           valueDesignator: ' demons',
         },

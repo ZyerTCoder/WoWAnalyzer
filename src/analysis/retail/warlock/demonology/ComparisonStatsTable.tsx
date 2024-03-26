@@ -10,11 +10,16 @@ import TALENTS from 'common/TALENTS/warlock';
 import Combatant from 'parser/core/Combatant';
 
 const tempTopValues: { [key: string]: number } = {
-  'Summon Demonic Tyrantcasts': 4,
-  'Summon Demonic Tyrantdemons empowered': 14,
-  'Call Dreadstalkers efficiency': 50,
-  'Bilescourge Bombers efficiency': 65,
+  'Summon Demonic Tyrant casts': 4,
+  'Summon Demonic Tyrant demons': 14,
+  'Call Dreadstalkers% efficiency': 50,
+  'Call Dreadstalkers missed casts': 0,
+  'Bilescourge Bombers% efficiency': 65,
   'Bilescourge Bombers casts': 10,
+  'Doom Brand explosions': 41,
+  'Doom Brand% uptime': 91,
+  'Doomfiend summons': 8,
+  'Doomfiend bolts/volley': 1.5,
 };
 
 function TempAddExtraAbilities(stats: ComparisonStat[], combatant: Combatant) {
@@ -27,12 +32,19 @@ function TempAddExtraAbilities(stats: ComparisonStat[], combatant: Combatant) {
       name: TALENTS.CALL_DREADSTALKERS_TALENT.name,
       sort: 2,
       first: {
-        name: ' casts',
         value: castEffic.casts,
         valueDesignator: ' casts',
       },
       second: {
-        name: ' efficiency',
+        value: castEffic.maxCasts - castEffic.casts,
+        valueDesignator: ' missed casts',
+      },
+    });
+    stats.push({
+      icon: TALENTS.CALL_DREADSTALKERS_TALENT.icon,
+      name: TALENTS.CALL_DREADSTALKERS_TALENT.name,
+      sort: 2,
+      first: {
         value: Number((castEffic.efficiency! * 100).toFixed(0)),
         valueDesignator: '% efficiency',
       },
@@ -48,12 +60,10 @@ function TempAddExtraAbilities(stats: ComparisonStat[], combatant: Combatant) {
       name: TALENTS.BILESCOURGE_BOMBERS_TALENT.name,
       sort: 2,
       first: {
-        name: ' casts',
         value: castEffic.casts,
         valueDesignator: ' casts',
       },
       second: {
-        name: ' efficiency',
         value: Number((castEffic.efficiency! * 100).toFixed(0)),
         valueDesignator: '% efficiency',
       },
@@ -67,7 +77,7 @@ function entries(stats: ComparisonStat[]) {
   return stats.map((stat) => {
     let firstPerfPercent = 0;
     let firstPerfColor = '#70b570';
-    if (stat.first.top) {
+    if (stat.first.top !== undefined) {
       const under = stat.first.value < stat.first.top;
       under
         ? (firstPerfPercent = stat.first.value / stat.first.top)
@@ -76,7 +86,7 @@ function entries(stats: ComparisonStat[]) {
     }
     let secondPerfPercent = 0;
     let secondPerfColor = '#70b570';
-    if (stat.second.top) {
+    if (stat.second && stat.second.top !== undefined) {
       const under = stat.second.value < stat.second.top;
       under
         ? (secondPerfPercent = stat.second.value / stat.second.top)
@@ -90,15 +100,15 @@ function entries(stats: ComparisonStat[]) {
           <Icon icon={stat.icon}></Icon>
         </td>
         <td style={{ width: '20%' }}>{stat.name}</td>
-        <td style={{ width: '10%' }}>
+        <td style={{ width: '12%' }}>
           {stat.first.value}
           {stat.first.valueDesignator}
         </td>
-        <td style={{ width: '10%' }}>
-          {stat.second.value}
-          {stat.second.valueDesignator}
+        <td style={{ width: '12%' }}>
+          {stat.second && stat.second.value}
+          {stat.second && stat.second.valueDesignator}
         </td>
-        {!stat.first.top ? (
+        {stat.first.top === undefined ? (
           <>
             <td>No top performer data</td>
             <td />
@@ -122,7 +132,12 @@ function entries(stats: ComparisonStat[]) {
             </td>
           </>
         )}
-        {!stat.second.top ? (
+        {!stat.second ? (
+          <>
+            <td />
+            <td />
+          </>
+        ) : stat.second.top === undefined ? (
           <>
             <td>No top performer data</td>
             <td />
@@ -141,8 +156,8 @@ function entries(stats: ComparisonStat[]) {
               </div>
             </td>
             <td>
-              {stat.second.top}
-              {stat.second.valueDesignator}
+              {stat.second && stat.second.top}
+              {stat.second && stat.second.valueDesignator}
             </td>
           </>
         )}
@@ -163,8 +178,8 @@ function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof Comba
 
   stats.sort((a, b) => a.sort - b.sort);
   stats.forEach((stat) => {
-    stat.first.top = tempTopValues[stat.name + stat.first.name];
-    stat.second.top = tempTopValues[stat.name + stat.second.name];
+    stat.first.top = tempTopValues[stat.name + stat.first.valueDesignator];
+    stat.second && (stat.second.top = tempTopValues[stat.name + stat.second.valueDesignator]);
   });
 
   return (
@@ -196,8 +211,10 @@ function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof Comba
 
 function getStatsString(stats: ComparisonStat[]) {
   const out: (string | number)[][] = [];
-  stats.forEach((stat) => out.push([stat.name + stat.first.name, stat.first.value]));
-  stats.forEach((stat) => out.push([stat.name + stat.second.name, stat.second.value]));
+  stats.forEach((stat) => out.push([stat.name + stat.first.valueDesignator, stat.first.value]));
+  stats.forEach(
+    (stat) => stat.second && out.push([stat.name + stat.second.valueDesignator, stat.second.value]),
+  );
   console.error(out);
   return JSON.stringify(out);
 }

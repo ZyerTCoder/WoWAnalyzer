@@ -213,12 +213,10 @@ class T31AmirdrassilDemonology extends Analyzer implements HasComparisonStat {
         name: SPELLS.DOOM_BRAND_DEBUFF.name,
         sort: 4,
         first: {
-          name: ' exploded',
           value: this.doomBrand.removeBuffCount,
           valueDesignator: ' explosions',
         },
         second: {
-          name: ' uptime',
           value: Number((this.doomBrandUptime * 100).toFixed(0)),
           valueDesignator: '% uptime',
         },
@@ -228,12 +226,10 @@ class T31AmirdrassilDemonology extends Analyzer implements HasComparisonStat {
         name: SPELLS.DOOMFIEND_SUMMON.name,
         sort: 4,
         first: {
-          name: ' exploded',
           value: this.doomfiend.summons,
           valueDesignator: ' summons',
         },
         second: {
-          name: ' uptime',
           value: Number(this.doomfiendHitsPerVolley.toFixed(1)),
           valueDesignator: ' bolts/volley',
         },
