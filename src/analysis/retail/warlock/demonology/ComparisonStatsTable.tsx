@@ -78,20 +78,20 @@ function entries(stats: ComparisonStat[]) {
     let firstPerfPercent = 0;
     let firstPerfColor = '#70b570';
     if (stat.first.top !== undefined) {
-      const under = stat.first.value < stat.first.top;
+      const under = stat.first.value <= stat.first.top;
       under
-        ? (firstPerfPercent = stat.first.value / stat.first.top)
-        : (firstPerfPercent = stat.first.top / stat.first.value);
-      firstPerfPercent < 0.8 ? (firstPerfColor = '#ff8000') : (firstPerfColor = '#70b570');
+        ? (firstPerfPercent = 1 - stat.first.value / stat.first.top)
+        : (firstPerfPercent = 1 - stat.first.top / stat.first.value);
+      firstPerfPercent > 0.2 ? (firstPerfColor = '#ff8000') : (firstPerfColor = '#70b570');
     }
     let secondPerfPercent = 0;
     let secondPerfColor = '#70b570';
     if (stat.second && stat.second.top !== undefined) {
       const under = stat.second.value < stat.second.top;
       under
-        ? (secondPerfPercent = stat.second.value / stat.second.top)
-        : (secondPerfPercent = stat.second.top / stat.second.value);
-      secondPerfPercent < 0.8 ? (secondPerfColor = '#ff8000') : (secondPerfColor = '#70b570');
+        ? (secondPerfPercent = 1 - stat.second.value / stat.second.top)
+        : (secondPerfPercent = 1 - stat.second.top / stat.second.value);
+      secondPerfPercent > 0.2 ? (secondPerfColor = '#ff8000') : (secondPerfColor = '#70b570');
     }
 
     return (
