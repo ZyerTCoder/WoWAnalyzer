@@ -3,7 +3,7 @@ export interface ComparisonStat {
   name: string;
   value: number;
   valueDesignator: string;
-  relevance: RELEVANCE_CATEGORY;
+  sort: number;
   top?: number;
 }
 
@@ -13,10 +13,4 @@ export interface HasComparisonStat {
 
 export function instanceOfComparisonStat(object: any): object is HasComparisonStat {
   return 'comparisonStat' in object;
-}
-
-export const enum RELEVANCE_CATEGORY {
-  CORE = 1,
-  OTHER = 4,
-  EXTRA = 10,
 }

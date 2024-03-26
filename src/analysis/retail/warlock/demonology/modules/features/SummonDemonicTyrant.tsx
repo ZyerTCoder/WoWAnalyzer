@@ -25,11 +25,7 @@ import EmbeddedTimelineContainer, {
   SpellTimeline,
 } from 'interface/report/Results/Timeline/EmbeddedTimeline';
 import SpellUsable from 'parser/shared/modules/SpellUsable';
-import {
-  ComparisonStat,
-  HasComparisonStat,
-  RELEVANCE_CATEGORY,
-} from '../../comparisonStats/comparisonStatsInterface';
+import { ComparisonStat, HasComparisonStat } from '../../comparisonStats/comparisonStatsInterface';
 
 const debug = false;
 
@@ -490,15 +486,15 @@ class SummonDemonicTyrant extends Analyzer implements HasComparisonStat {
         icon: SPELLS.SUMMON_DEMONIC_TYRANT.icon,
         name: 'Total Tyrant Casts',
         value: this.tyrantsCast,
-        valueDesignator: 'casts',
-        relevance: RELEVANCE_CATEGORY.CORE,
+        valueDesignator: ' casts',
+        sort: 1,
       },
       {
         icon: SPELLS.SUMMON_DEMONIC_TYRANT.icon,
         name: 'Total Demons Empowered',
         value: Number(this.populatedEmpoweredDemonsTable[0]['Total']),
-        valueDesignator: 'demons',
-        relevance: RELEVANCE_CATEGORY.CORE,
+        valueDesignator: ' demons',
+        sort: 1,
       },
     ];
     return data;

@@ -1,18 +1,52 @@
 import CombatLogParser from './CombatLogParser';
-import { GuideProps, Section } from 'interface/guide';
+import { GuideProps, Section, useAnalyzer } from 'interface/guide';
 import {
   ComparisonStat,
   instanceOfComparisonStat,
 } from './comparisonStats/comparisonStatsInterface';
 import { Icon } from 'interface';
+import CastEfficiency from 'parser/shared/modules/CastEfficiency';
+import TALENTS from 'common/TALENTS/warlock';
 
 const tempTopValues: { [key: string]: number } = {
   'Total Tyrant Casts': 4,
   'Total Demons Empowered': 14,
+  'Call Dreadstalkers efficiency': 50,
 };
+
+function TempAddExtraAbilities(stats: ComparisonStat[]) {
+  const castEffic = useAnalyzer(CastEfficiency)!.getCastEfficiencyForSpell(
+    TALENTS.CALL_DREADSTALKERS_TALENT,
+  )!;
+
+  stats.push({
+    icon: TALENTS.CALL_DREADSTALKERS_TALENT.icon,
+    name: TALENTS.CALL_DREADSTALKERS_TALENT.name + ' casts',
+    value: castEffic.casts,
+    valueDesignator: ' casts',
+    sort: 2,
+  });
+  stats.push({
+    icon: TALENTS.CALL_DREADSTALKERS_TALENT.icon,
+    name: TALENTS.CALL_DREADSTALKERS_TALENT.name + ' efficiency',
+    value: Number((castEffic.efficiency! * 100).toFixed(0)),
+    valueDesignator: '%',
+    sort: 2,
+  });
+
+  return stats;
+}
 
 function entries(stats: ComparisonStat[]) {
   return stats.map((stat) => {
+    let perfPercent = 0;
+    let perfColor = '#70b570';
+    if (stat.top) {
+      const under = stat.value < stat.top;
+      under ? (perfPercent = stat.value / stat.top) : (perfPercent = stat.top / stat.value);
+      perfPercent < 0.8 ? (perfColor = '#ff8000') : (perfColor = '#70b570');
+    }
+
     return (
       <tr key={stat.name}>
         <td style={{ width: '25px' }}>
@@ -20,22 +54,33 @@ function entries(stats: ComparisonStat[]) {
         </td>
         <td style={{ width: '20%' }}>{stat.name}</td>
         <td style={{ width: '20%' }}>
-          {stat.value} {stat.valueDesignator}
+          {stat.value}
+          {stat.valueDesignator}
         </td>
-        <td style={{ width: '20%' }}>
-          <div className="flex performance-bar-container">
-            <div
-              className="flex-sub performance-bar"
-              style={{
-                width: `${(stat.value / stat.top!) * 100}%`,
-                backgroundColor: '#70b570',
-              }}
-            />
-          </div>
-        </td>
-        <td>
-          {stat.top} {stat.valueDesignator}
-        </td>
+        {!stat.top ? (
+          <>
+            <td>No top performer data available</td>
+            <td />
+          </>
+        ) : (
+          <>
+            <td style={{ width: '20%' }}>
+              <div className="flex performance-bar-container">
+                <div
+                  className="flex-sub performance-bar"
+                  style={{
+                    width: `${perfPercent * 100}%`,
+                    backgroundColor: perfColor,
+                  }}
+                />
+              </div>
+            </td>
+            <td>
+              {stat.top}
+              {stat.valueDesignator}
+            </td>
+          </>
+        )}
       </tr>
     );
   });
@@ -48,10 +93,14 @@ function ComparisonStatsTable({ modules }: GuideProps<typeof CombatLogParser>) {
       stats = stats.concat(module.comparisonStat);
     }
   });
-  stats.sort((a, b) => a.relevance - b.relevance);
+
+  stats = TempAddExtraAbilities(stats);
+
+  stats.sort((a, b) => a.sort - b.sort);
   stats.forEach((stat) => {
     stat.top = tempTopValues[stat.name];
   });
+
   return (
     <Section title="Test">
       <div>
@@ -74,7 +123,7 @@ function ComparisonStatsTable({ modules }: GuideProps<typeof CombatLogParser>) {
       </div>
       <br />
       <br />
-      {JSON.stringify(stats)}
+      {JSON.stringify(stats.map((stat) => [stat.name, stat.value]))}
     </Section>
   );
 }
