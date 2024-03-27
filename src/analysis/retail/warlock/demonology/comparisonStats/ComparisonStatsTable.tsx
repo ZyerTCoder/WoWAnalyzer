@@ -4,6 +4,7 @@ import {
   ComparisonStat,
   instanceOfComparisonStat,
   getFormattedStat,
+  SubStat,
 } from './comparisonStatsInterface';
 import { Icon } from 'interface';
 import { AddAbilitiesWithoutAnalyzers } from './AddAbilitiesWithoutAnalyzers';
@@ -21,95 +22,65 @@ const tempTopValues: { [key: string]: number } = {
   'Doomfiend bolts/volley': 1.5,
 };
 
-function entries(stats: ComparisonStat[]) {
-  return stats.map((stat) => {
-    let firstPerfPercent = 0;
-    let firstPerfColor = '#70b570';
-    if (stat.first.top !== undefined) {
-      const under = stat.first.value <= stat.first.top;
+function getTopPerformer(subStat: SubStat) {
+  if (subStat.top === undefined) {
+    return <td colSpan={2}>No top performer data</td>;
+  } else {
+    let perfPercent = 0;
+    let perfColor = '#70b570';
+    if (subStat.top !== undefined) {
+      const under = subStat.value <= subStat.top;
       under
-        ? (firstPerfPercent = 1 - stat.first.value / stat.first.top)
-        : (firstPerfPercent = 1 - stat.first.top / stat.first.value);
-      firstPerfPercent > 0.2 ? (firstPerfColor = '#ff8000') : (firstPerfColor = '#70b570');
+        ? (perfPercent = 1 - subStat.value / subStat.top)
+        : (perfPercent = 1 - subStat.top / subStat.value);
+      perfPercent > 0.2 ? (perfColor = '#ff8000') : (perfColor = '#70b570');
     }
-    let secondPerfPercent = 0;
-    let secondPerfColor = '#70b570';
-    if (stat.second && stat.second.top !== undefined) {
-      const under = stat.second.value < stat.second.top;
-      under
-        ? (secondPerfPercent = 1 - stat.second.value / stat.second.top)
-        : (secondPerfPercent = 1 - stat.second.top / stat.second.value);
-      secondPerfPercent > 0.2 ? (secondPerfColor = '#ff8000') : (secondPerfColor = '#70b570');
-    }
-
     return (
-      <tr key={stat.name}>
-        <td style={{ width: '25px' }}>
-          <Icon icon={stat.icon}></Icon>
+      <>
+        <td style={{ width: '12%' }}>
+          <div className="flex performance-bar-container">
+            <div
+              className="flex-sub performance-bar"
+              style={{
+                width: `${perfPercent * 100}%`,
+                backgroundColor: perfColor,
+              }}
+            />
+          </div>
         </td>
-        <td style={{ width: '20%' }}>{stat.name}</td>
-        <td style={{ width: '12%' }}>{getFormattedStat(stat.first)}</td>
-        <td style={{ width: '12%' }}>{stat.second && getFormattedStat(stat.second)}</td>
-        {stat.first.top === undefined ? (
-          <>
-            <td colSpan={2}>No top performer data</td>
-          </>
-        ) : (
-          <>
-            <td style={{ width: '12%' }}>
-              <div className="flex performance-bar-container">
-                <div
-                  className="flex-sub performance-bar"
-                  style={{
-                    width: `${firstPerfPercent * 100}%`,
-                    backgroundColor: firstPerfColor,
-                  }}
-                />
-              </div>
-            </td>
-            <td>
-              {getFormattedStat({
-                value: stat.first.top,
-                valueDesignator: stat.first.valueDesignator,
-                formatType: stat.first.formatType,
-              })}
-            </td>
-          </>
-        )}
-        {!stat.second ? (
-          <>
-            <td />
-            <td />
-          </>
-        ) : stat.second.top === undefined ? (
-          <>
-            <td colSpan={2}>No top performer data</td>
-          </>
-        ) : (
-          <>
-            <td style={{ width: '12%' }}>
-              <div className="flex performance-bar-container">
-                <div
-                  className="flex-sub performance-bar"
-                  style={{
-                    width: `${secondPerfPercent * 100}%`,
-                    backgroundColor: secondPerfColor,
-                  }}
-                />
-              </div>
-            </td>
-            <td>
-              {getFormattedStat({
-                value: stat.second.top,
-                valueDesignator: stat.second.valueDesignator,
-                formatType: stat.second.formatType,
-              })}
-            </td>
-          </>
-        )}
-      </tr>
+        <td>
+          {getFormattedStat({
+            value: subStat.top,
+            valueDesignator: subStat.valueDesignator,
+            formatType: subStat.formatType,
+          })}
+        </td>
+      </>
     );
+  }
+}
+
+function entries(stats: ComparisonStat[]) {
+  return stats.map((stat) => (
+    <tr key={stat.name}>
+      <td style={{ width: '25px' }}>
+        <Icon icon={stat.icon}></Icon>
+      </td>
+      <td style={{ width: '20%' }}>{stat.name}</td>
+      <td style={{ width: '12%' }}>{getFormattedStat(stat.first)}</td>
+      <td style={{ width: '12%' }}>{stat.second && getFormattedStat(stat.second)}</td>
+      {getTopPerformer(stat.first)}
+      {stat.second ? getTopPerformer(stat.second) : <td colSpan={2}></td>}
+    </tr>
+  ));
+}
+
+function addTopValues(stats: ComparisonStat[]): ComparisonStat[] {
+  stats.forEach((stat) => {
+    stat.first.top = tempTopValues[stat.name + stat.first.valueDesignator];
+    stat.second && (stat.second.top = tempTopValues[stat.name + stat.second.valueDesignator]);
   });
+  return stats;
 }
 
 function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof CombatLogParser>) {
@@ -121,6 +92,7 @@ function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof Comba
   });
 
   stats = AddAbilitiesWithoutAnalyzers(stats, info.combatant);
+  stats = addTopValues(stats);
 
   stats.sort((a, b) => {
     if (a.sort !== b.sort || a.name === b.name) {
@@ -128,10 +100,6 @@ function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof Comba
     } else {
       return a.name < b.name ? -1 : 1;
     }
-  });
-  stats.forEach((stat) => {
-    stat.first.top = tempTopValues[stat.name + stat.first.valueDesignator];
-    stat.second && (stat.second.top = tempTopValues[stat.name + stat.second.valueDesignator]);
   });
 
   return (
@@ -156,12 +124,12 @@ function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof Comba
       </div>
       <br />
       <br />
-      {getStatsString(stats)}
+      {tempGetStatsString(stats)}
     </Section>
   );
 }
 
-function getStatsString(stats: ComparisonStat[]) {
+function tempGetStatsString(stats: ComparisonStat[]) {
   const out: (string | number)[][] = [];
   stats.forEach((stat) => out.push([stat.name + stat.first.valueDesignator, stat.first.value]));
   stats.forEach(
