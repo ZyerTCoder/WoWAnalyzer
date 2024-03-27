@@ -1,6 +1,6 @@
 import { formatNumber, formatPercentage } from 'common/format';
 
-interface SmallStat {
+export interface SubStat {
   value: number;
   valueDesignator: string;
   formatType: formatStatType;
@@ -11,8 +11,8 @@ export interface ComparisonStat {
   icon: string;
   sort: number;
   name: string;
-  first: SmallStat;
-  second?: SmallStat;
+  first: SubStat;
+  second?: SubStat;
 }
 
 export interface HasComparisonStat {
@@ -26,7 +26,7 @@ export enum formatStatType {
   TO_PRETTY,
 }
 
-export function getFormattedStat(stat: SmallStat) {
+export function getFormattedStat(stat: SubStat) {
   switch (stat.formatType) {
     case formatStatType.NO_FORMAT:
       return stat.value + stat.valueDesignator;
