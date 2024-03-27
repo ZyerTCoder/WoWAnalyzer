@@ -1,15 +1,12 @@
 import CombatLogParser from '../CombatLogParser';
-import { GuideProps, Section, useAnalyzer } from 'interface/guide';
+import { GuideProps, Section } from 'interface/guide';
 import {
   ComparisonStat,
   instanceOfComparisonStat,
-  formatStatType,
   getFormattedStat,
 } from './comparisonStatsInterface';
 import { Icon } from 'interface';
-import CastEfficiency from 'parser/shared/modules/CastEfficiency';
-import TALENTS from 'common/TALENTS/warlock';
-import Combatant from 'parser/core/Combatant';
+import { AddAbilitiesWithoutAnalyzers } from './AddAbilitiesWithoutAnalyzers';
 
 const tempTopValues: { [key: string]: number } = {
   'Summon Demonic Tyrant casts': 4,
@@ -23,62 +20,6 @@ const tempTopValues: { [key: string]: number } = {
   'Doomfiend summons': 8,
   'Doomfiend bolts/volley': 1.5,
 };
-
-function TempAddExtraAbilities(stats: ComparisonStat[], combatant: Combatant) {
-  let castEffic = useAnalyzer(CastEfficiency)!.getCastEfficiencyForSpell(
-    TALENTS.CALL_DREADSTALKERS_TALENT,
-  )!;
-  if (combatant.hasTalent(TALENTS.CALL_DREADSTALKERS_TALENT)) {
-    stats.push({
-      icon: TALENTS.CALL_DREADSTALKERS_TALENT.icon,
-      name: TALENTS.CALL_DREADSTALKERS_TALENT.name,
-      sort: 2,
-      first: {
-        value: castEffic.casts,
-        valueDesignator: ' casts',
-        formatType: formatStatType.NO_FORMAT,
-      },
-      second: {
-        value: castEffic.maxCasts - castEffic.casts,
-        valueDesignator: ' missed casts',
-        formatType: formatStatType.NO_FORMAT,
-      },
-    });
-    stats.push({
-      icon: TALENTS.CALL_DREADSTALKERS_TALENT.icon,
-      name: TALENTS.CALL_DREADSTALKERS_TALENT.name,
-      sort: 2,
-      first: {
-        value: castEffic.efficiency!,
-        valueDesignator: '% efficiency',
-        formatType: formatStatType.TO_PERCENT,
-      },
-    });
-  }
-
-  castEffic = useAnalyzer(CastEfficiency)!.getCastEfficiencyForSpell(
-    TALENTS.BILESCOURGE_BOMBERS_TALENT,
-  )!;
-  if (combatant.hasTalent(TALENTS.BILESCOURGE_BOMBERS_TALENT)) {
-    stats.push({
-      icon: TALENTS.BILESCOURGE_BOMBERS_TALENT.icon,
-      name: TALENTS.BILESCOURGE_BOMBERS_TALENT.name,
-      sort: 2,
-      first: {
-        value: castEffic.casts,
-        valueDesignator: ' casts',
-        formatType: formatStatType.NO_FORMAT,
-      },
-      second: {
-        value: castEffic.efficiency!,
-        valueDesignator: '% efficiency',
-        formatType: formatStatType.TO_PERCENT,
-      },
-    });
-  }
-
-  return stats;
-}
 
 function entries(stats: ComparisonStat[]) {
   return stats.map((stat) => {
@@ -179,7 +120,7 @@ function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof Comba
     }
   });
 
-  stats = TempAddExtraAbilities(stats, info.combatant);
+  stats = AddAbilitiesWithoutAnalyzers(stats, info.combatant);
 
   stats.sort((a, b) => {
     if (a.sort !== b.sort || a.name === b.name) {
