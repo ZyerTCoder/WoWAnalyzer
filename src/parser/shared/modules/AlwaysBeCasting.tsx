@@ -12,10 +12,15 @@ import { QualitativePerformance } from 'parser/ui/QualitativePerformance';
 
 import Abilities from '../../core/modules/Abilities';
 import GlobalCooldown from './GlobalCooldown';
+import {
+  ComparisonStat,
+  HasComparisonStat,
+  formatStatType,
+} from 'analysis/retail/warlock/demonology/comparisonStats/comparisonStatsInterface';
 
 const DEBUG = false;
 
-class AlwaysBeCasting extends Analyzer {
+class AlwaysBeCasting extends Analyzer implements HasComparisonStat {
   static dependencies = {
     haste: Haste,
     abilities: Abilities,
@@ -290,6 +295,27 @@ class AlwaysBeCasting extends Analyzer {
           </Trans>,
         ),
     );
+  }
+
+  get comparisonStat(): ComparisonStat[] {
+    const data: ComparisonStat[] = [
+      {
+        icon: 'spell_mage_altertime',
+        name: 'Downtime',
+        sort: 0,
+        first: {
+          value: this.downtimePercentage,
+          valueDesignator: '% downtime',
+          formatType: formatStatType.TO_PERCENT,
+        },
+        second: {
+          value: this.activeTimePercentage,
+          valueDesignator: '% uptime',
+          formatType: formatStatType.TO_PERCENT,
+        },
+      },
+    ];
+    return data;
   }
 }
 
