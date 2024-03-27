@@ -3,6 +3,8 @@ import { GuideProps, Section, useAnalyzer } from 'interface/guide';
 import {
   ComparisonStat,
   instanceOfComparisonStat,
+  formatStatType,
+  getFormattedStat,
 } from './comparisonStats/comparisonStatsInterface';
 import { Icon } from 'interface';
 import CastEfficiency from 'parser/shared/modules/CastEfficiency';
@@ -12,9 +14,9 @@ import Combatant from 'parser/core/Combatant';
 const tempTopValues: { [key: string]: number } = {
   'Summon Demonic Tyrant casts': 4,
   'Summon Demonic Tyrant demons': 14,
-  'Call Dreadstalkers% efficiency': 50,
-  'Call Dreadstalkers missed casts': 0,
-  'Bilescourge Bombers% efficiency': 65,
+  'Call Dreadstalkers% efficiency': 0.5,
+  'Call Dreadstalkers missed casts': 3,
+  'Bilescourge Bombers% efficiency': 0.65,
   'Bilescourge Bombers casts': 10,
   'Doom Brand explosions': 41,
   'Doom Brand% uptime': 91,
@@ -34,10 +36,12 @@ function TempAddExtraAbilities(stats: ComparisonStat[], combatant: Combatant) {
       first: {
         value: castEffic.casts,
         valueDesignator: ' casts',
+        formatType: formatStatType.NO_FORMAT,
       },
       second: {
         value: castEffic.maxCasts - castEffic.casts,
         valueDesignator: ' missed casts',
+        formatType: formatStatType.NO_FORMAT,
       },
     });
     stats.push({
@@ -45,8 +49,9 @@ function TempAddExtraAbilities(stats: ComparisonStat[], combatant: Combatant) {
       name: TALENTS.CALL_DREADSTALKERS_TALENT.name,
       sort: 2,
       first: {
-        value: Number((castEffic.efficiency! * 100).toFixed(0)),
+        value: castEffic.efficiency!,
         valueDesignator: '% efficiency',
+        formatType: formatStatType.TO_PERCENT,
       },
     });
   }
@@ -62,10 +67,12 @@ function TempAddExtraAbilities(stats: ComparisonStat[], combatant: Combatant) {
       first: {
         value: castEffic.casts,
         valueDesignator: ' casts',
+        formatType: formatStatType.NO_FORMAT,
       },
       second: {
-        value: Number((castEffic.efficiency! * 100).toFixed(0)),
+        value: castEffic.efficiency!,
         valueDesignator: '% efficiency',
+        formatType: formatStatType.TO_PERCENT,
       },
     });
   }
@@ -100,22 +107,15 @@ function entries(stats: ComparisonStat[]) {
           <Icon icon={stat.icon}></Icon>
         </td>
         <td style={{ width: '20%' }}>{stat.name}</td>
-        <td style={{ width: '12%' }}>
-          {stat.first.value}
-          {stat.first.valueDesignator}
-        </td>
-        <td style={{ width: '12%' }}>
-          {stat.second && stat.second.value}
-          {stat.second && stat.second.valueDesignator}
-        </td>
+        <td style={{ width: '12%' }}>{getFormattedStat(stat.first)}</td>
+        <td style={{ width: '12%' }}>{stat.second && getFormattedStat(stat.second)}</td>
         {stat.first.top === undefined ? (
           <>
-            <td>No top performer data</td>
-            <td />
+            <td colSpan={2}>No top performer data</td>
           </>
         ) : (
           <>
-            <td style={{ width: '15%' }}>
+            <td style={{ width: '12%' }}>
               <div className="flex performance-bar-container">
                 <div
                   className="flex-sub performance-bar"
@@ -127,8 +127,11 @@ function entries(stats: ComparisonStat[]) {
               </div>
             </td>
             <td>
-              {stat.first.top}
-              {stat.first.valueDesignator}
+              {getFormattedStat({
+                value: stat.first.top,
+                valueDesignator: stat.first.valueDesignator,
+                formatType: stat.first.formatType,
+              })}
             </td>
           </>
         )}
@@ -139,12 +142,11 @@ function entries(stats: ComparisonStat[]) {
           </>
         ) : stat.second.top === undefined ? (
           <>
-            <td>No top performer data</td>
-            <td />
+            <td colSpan={2}>No top performer data</td>
           </>
         ) : (
           <>
-            <td style={{ width: '15%' }}>
+            <td style={{ width: '12%' }}>
               <div className="flex performance-bar-container">
                 <div
                   className="flex-sub performance-bar"
@@ -156,8 +158,11 @@ function entries(stats: ComparisonStat[]) {
               </div>
             </td>
             <td>
-              {stat.second && stat.second.top}
-              {stat.second && stat.second.valueDesignator}
+              {getFormattedStat({
+                value: stat.second.top,
+                valueDesignator: stat.second.valueDesignator,
+                formatType: stat.second.formatType,
+              })}
             </td>
           </>
         )}

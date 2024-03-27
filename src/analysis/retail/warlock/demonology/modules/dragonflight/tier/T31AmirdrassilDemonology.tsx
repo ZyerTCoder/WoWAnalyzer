@@ -19,6 +19,7 @@ import UptimeBar from 'parser/ui/UptimeBar';
 import {
   ComparisonStat,
   HasComparisonStat,
+  formatStatType,
 } from '../../../comparisonStats/comparisonStatsInterface';
 
 class T31AmirdrassilDemonology extends Analyzer implements HasComparisonStat {
@@ -215,10 +216,27 @@ class T31AmirdrassilDemonology extends Analyzer implements HasComparisonStat {
         first: {
           value: this.doomBrand.removeBuffCount,
           valueDesignator: ' explosions',
+          formatType: formatStatType.NO_FORMAT,
         },
         second: {
-          value: Number((this.doomBrandUptime * 100).toFixed(0)),
-          valueDesignator: '% uptime',
+          value: this.doomBrandUptime,
+          valueDesignator: ' uptime',
+          formatType: formatStatType.TO_PERCENT,
+        },
+      },
+      {
+        icon: SPELLS.DOOM_BRAND_DEBUFF.icon,
+        name: SPELLS.DOOM_BRAND_DEBUFF.name,
+        sort: 100,
+        first: {
+          value: this.doomBrandHitsPerExpire,
+          valueDesignator: ' hits/brand',
+          formatType: formatStatType.TO_FIXED_1,
+        },
+        second: {
+          value: this.doomBrand.hits,
+          valueDesignator: ' hits',
+          formatType: formatStatType.NO_FORMAT,
         },
       },
       {
@@ -228,13 +246,46 @@ class T31AmirdrassilDemonology extends Analyzer implements HasComparisonStat {
         first: {
           value: this.doomfiend.summons,
           valueDesignator: ' summons',
+          formatType: formatStatType.NO_FORMAT,
         },
         second: {
-          value: Number(this.doomfiendHitsPerVolley.toFixed(1)),
-          valueDesignator: ' bolts/volley',
+          value: this.doomfiendHitsPerVolley,
+          valueDesignator: ' targets/volley',
+          formatType: formatStatType.TO_FIXED_1,
+        },
+      },
+      {
+        icon: SPELLS.DOOM_BRAND_DEBUFF.icon,
+        name: SPELLS.DOOM_BRAND_DEBUFF.name,
+        sort: 100,
+        first: {
+          value: this.doomBrandDamagePerExpire,
+          valueDesignator: ' dmg/brand',
+          formatType: formatStatType.TO_PRETTY,
+        },
+        second: {
+          value: this.doomBrand.damage,
+          valueDesignator: ' total dmg',
+          formatType: formatStatType.TO_PRETTY,
+        },
+      },
+      {
+        icon: SPELLS.DOOMFIEND_SUMMON.icon,
+        name: SPELLS.DOOMFIEND_SUMMON.name,
+        sort: 100,
+        first: {
+          value: this.doomfiendDamagePerSummon,
+          valueDesignator: ' dmg/doomfiend',
+          formatType: formatStatType.TO_PRETTY,
+        },
+        second: {
+          value: this.doomfiend.damage,
+          valueDesignator: ' total dmg',
+          formatType: formatStatType.TO_PRETTY,
         },
       },
     ];
+
     return data;
   }
 }

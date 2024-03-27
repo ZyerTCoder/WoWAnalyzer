@@ -25,7 +25,11 @@ import EmbeddedTimelineContainer, {
   SpellTimeline,
 } from 'interface/report/Results/Timeline/EmbeddedTimeline';
 import SpellUsable from 'parser/shared/modules/SpellUsable';
-import { ComparisonStat, HasComparisonStat } from '../../comparisonStats/comparisonStatsInterface';
+import {
+  ComparisonStat,
+  HasComparisonStat,
+  formatStatType,
+} from '../../comparisonStats/comparisonStatsInterface';
 
 const debug = false;
 
@@ -489,10 +493,12 @@ class SummonDemonicTyrant extends Analyzer implements HasComparisonStat {
         first: {
           value: this.tyrantsCast,
           valueDesignator: ' casts',
+          formatType: formatStatType.NO_FORMAT,
         },
         second: {
           value: Number(this.populatedEmpoweredDemonsTable[0]['Total']),
           valueDesignator: ' demons',
+          formatType: formatStatType.TO_FIXED_1,
         },
       },
     ];
