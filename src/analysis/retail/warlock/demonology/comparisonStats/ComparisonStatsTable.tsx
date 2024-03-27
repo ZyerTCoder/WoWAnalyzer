@@ -1,11 +1,11 @@
-import CombatLogParser from './CombatLogParser';
+import CombatLogParser from '../CombatLogParser';
 import { GuideProps, Section, useAnalyzer } from 'interface/guide';
 import {
   ComparisonStat,
   instanceOfComparisonStat,
   formatStatType,
   getFormattedStat,
-} from './comparisonStats/comparisonStatsInterface';
+} from './comparisonStatsInterface';
 import { Icon } from 'interface';
 import CastEfficiency from 'parser/shared/modules/CastEfficiency';
 import TALENTS from 'common/TALENTS/warlock';

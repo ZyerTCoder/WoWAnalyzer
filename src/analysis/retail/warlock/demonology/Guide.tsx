@@ -4,7 +4,7 @@ import PreparationSection from 'interface/guide/components/Preparation/Preparati
 import CooldownSubsection from './modules/guide/CooldownsSubsection';
 import ResourceUsage from './modules/guide/ResourceUsage';
 import DefensivesGuide from '../shared/Defensives';
-import ComparisonStatsTable from './ComparisonStatsTable';
+import ComparisonStatsTable from './comparisonStats/ComparisonStatsTable';
 
 export default function Guide({ modules, events, info }: GuideProps<typeof CombatLogParser>) {
   return (
