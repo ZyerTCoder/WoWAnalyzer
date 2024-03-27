@@ -16,13 +16,9 @@ import STATISTIC_ORDER from 'parser/ui/STATISTIC_ORDER';
 import Statistic from 'parser/ui/Statistic';
 import StatisticBar from 'parser/ui/StatisticBar';
 import UptimeBar from 'parser/ui/UptimeBar';
-import {
-  ComparisonStat,
-  HasComparisonStat,
-  formatStatType,
-} from '../../../comparisonStats/comparisonStatsInterface';
+import { ComparisonStat, formatStatType } from '../../../comparisonStats/comparisonStatsInterface';
 
-class T31AmirdrassilDemonology extends Analyzer implements HasComparisonStat {
+class T31AmirdrassilDemonology extends Analyzer {
   static dependencies = {
     enemies: Enemies,
   };
@@ -227,7 +223,7 @@ class T31AmirdrassilDemonology extends Analyzer implements HasComparisonStat {
       {
         icon: SPELLS.DOOM_BRAND_DEBUFF.icon,
         name: SPELLS.DOOM_BRAND_DEBUFF.name,
-        sort: 100,
+        sort: 4,
         first: {
           value: this.doomBrandHitsPerExpire,
           valueDesignator: ' hits/brand',

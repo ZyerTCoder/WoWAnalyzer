@@ -181,7 +181,13 @@ function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof Comba
 
   stats = TempAddExtraAbilities(stats, info.combatant);
 
-  stats.sort((a, b) => a.sort - b.sort);
+  stats.sort((a, b) => {
+    if (a.sort !== b.sort || a.name === b.name) {
+      return a.sort - b.sort;
+    } else {
+      return a.name < b.name ? -1 : 1;
+    }
+  });
   stats.forEach((stat) => {
     stat.first.top = tempTopValues[stat.name + stat.first.valueDesignator];
     stat.second && (stat.second.top = tempTopValues[stat.name + stat.second.valueDesignator]);

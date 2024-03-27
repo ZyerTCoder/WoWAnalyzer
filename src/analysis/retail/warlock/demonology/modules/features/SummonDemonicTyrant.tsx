@@ -25,11 +25,7 @@ import EmbeddedTimelineContainer, {
   SpellTimeline,
 } from 'interface/report/Results/Timeline/EmbeddedTimeline';
 import SpellUsable from 'parser/shared/modules/SpellUsable';
-import {
-  ComparisonStat,
-  HasComparisonStat,
-  formatStatType,
-} from '../../comparisonStats/comparisonStatsInterface';
+import { ComparisonStat, formatStatType } from '../../comparisonStats/comparisonStatsInterface';
 
 const debug = false;
 
@@ -49,7 +45,7 @@ interface TyrantCast {
   gfgOnCd: boolean;
 }
 
-class SummonDemonicTyrant extends Analyzer implements HasComparisonStat {
+class SummonDemonicTyrant extends Analyzer {
   static dependencies = {
     demoPets: DemoPets,
     spellUsable: SpellUsable,

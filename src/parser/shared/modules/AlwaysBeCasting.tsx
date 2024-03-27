@@ -14,13 +14,12 @@ import Abilities from '../../core/modules/Abilities';
 import GlobalCooldown from './GlobalCooldown';
 import {
   ComparisonStat,
-  HasComparisonStat,
   formatStatType,
 } from 'analysis/retail/warlock/demonology/comparisonStats/comparisonStatsInterface';
 
 const DEBUG = false;
 
-class AlwaysBeCasting extends Analyzer implements HasComparisonStat {
+class AlwaysBeCasting extends Analyzer {
   static dependencies = {
     haste: Haste,
     abilities: Abilities,
