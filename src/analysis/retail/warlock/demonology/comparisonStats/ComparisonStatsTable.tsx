@@ -20,8 +20,14 @@ function getTopPerformer(subStat: SubStat) {
       under
         ? (perfPercent = 1 - subStat.value / subStat.top)
         : (perfPercent = 1 - subStat.top / subStat.value);
-      perfPercent > 0.2 ? (perfColor = '#ff8000') : (perfColor = '#70b570');
     }
+    perfPercent < 0.2
+      ? (perfColor = '#70b570')
+      : perfPercent < 0.4
+      ? (perfColor = '#ff8000')
+      : (perfColor = '#d00833');
+    perfPercent > 0.5 ? (perfPercent = 1) : (perfPercent *= 2);
+
     return (
       <>
         <td style={{ width: '15%' }}>
