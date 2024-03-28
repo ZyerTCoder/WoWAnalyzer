@@ -9,19 +9,6 @@ import {
 import { Icon } from 'interface';
 import { AddAbilitiesWithoutAnalyzers } from './AddAbilitiesWithoutAnalyzers';
 
-const tempTopValues: { [key: string]: number } = {
-  'Summon Demonic Tyrant casts': 4,
-  'Summon Demonic Tyrant demons': 14,
-  'Call Dreadstalkers% efficiency': 0.5,
-  'Call Dreadstalkers missed casts': 3,
-  'Bilescourge Bombers% efficiency': 0.65,
-  'Bilescourge Bombers casts': 10,
-  'Doom Brand explosions': 41,
-  'Doom Brand% uptime': 91,
-  'Doomfiend summons': 8,
-  'Doomfiend bolts/volley': 1.5,
-};
-
 function getTopPerformer(subStat: SubStat) {
   if (subStat.top === undefined) {
     return <td colSpan={2}>No top performer data</td>;
@@ -140,12 +127,32 @@ function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof Comba
 }
 
 function tempGetStatsString(stats: ComparisonStat[]) {
-  const out: (string | number)[][] = [];
+  const out: { [key: string]: number } = {};
   stats.forEach((stat) =>
-    stat.stats.forEach((subStat) => out.push([stat.name + subStat.valueDesignator, subStat.value])),
+    stat.stats.forEach((subStat) => (out[stat.name + subStat.valueDesignator] = subStat.value)),
   );
-  console.error(out);
-  return JSON.stringify(out);
+  return 'const tempTopValues: { [key: string]: number } = ' + JSON.stringify(out);
 }
 
 export default ComparisonStatsTable;
+
+const tempTopValues: { [key: string]: number } = {
+  Downtimedowntime: 0.22411087485684644,
+  'Summon Demonic Tyrantcasts': 4,
+  'Summon Demonic Tyrantdemons': 14,
+  'Bilescourge Bomberscasts': 9,
+  'Bilescourge Bomberstime on cd': 0.5732500796909865,
+  'Call Dreadstalkerscasts': 17,
+  'Call Dreadstalkersmissed casts': 4,
+  'Call Dreadstalkerstime on cd': 0.7754893964110929,
+  'Doom Brandexplosions': 36,
+  'Doom Branduptime': 0.695467926721794,
+  'Doom Brandhits/brand': 3.3333333333333335,
+  'Doom Brandhits': 120,
+  Doomfiendsummons: 7,
+  'Doomfiendtargets/volley': 1.8666666666666667,
+  'Doom Branddmg/brand': 274772.05555555556,
+  'Doom Branddps': 23184.906527160565,
+  'Doomfienddmg/doomfiend': 848463.5714285715,
+  Doomfienddps: 13920.714500009375,
+};
