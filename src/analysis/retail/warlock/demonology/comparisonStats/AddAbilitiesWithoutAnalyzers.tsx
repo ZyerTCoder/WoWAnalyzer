@@ -26,7 +26,7 @@ export function AddAbilitiesWithoutAnalyzers(stats: ComparisonStat[], combatant:
         },
         {
           value: castEffic.efficiency!,
-          valueDesignator: 'efficiency',
+          valueDesignator: 'time on cd',
           formatType: formatStatType.TO_PERCENT,
         },
       ],
@@ -49,7 +49,7 @@ export function AddAbilitiesWithoutAnalyzers(stats: ComparisonStat[], combatant:
         },
         {
           value: castEffic.efficiency!,
-          valueDesignator: 'efficiency',
+          valueDesignator: 'time on cd',
           formatType: formatStatType.TO_PERCENT,
         },
       ],
