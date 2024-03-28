@@ -212,22 +212,22 @@ class T31AmirdrassilDemonology extends Analyzer {
         stats: [
           {
             value: this.doomBrand.removeBuffCount,
-            valueDesignator: ' explosions',
+            valueDesignator: 'explosions',
             formatType: formatStatType.NO_FORMAT,
           },
           {
             value: this.doomBrandUptime,
-            valueDesignator: ' uptime',
+            valueDesignator: 'uptime',
             formatType: formatStatType.TO_PERCENT,
           },
           {
             value: this.doomBrandHitsPerExpire,
-            valueDesignator: ' hits/brand',
+            valueDesignator: 'hits/brand',
             formatType: formatStatType.TO_FIXED_1,
           },
           {
             value: this.doomBrand.hits,
-            valueDesignator: ' hits',
+            valueDesignator: 'hits',
             formatType: formatStatType.NO_FORMAT,
           },
         ],
@@ -239,12 +239,12 @@ class T31AmirdrassilDemonology extends Analyzer {
         stats: [
           {
             value: this.doomfiend.summons,
-            valueDesignator: ' summons',
+            valueDesignator: 'summons',
             formatType: formatStatType.NO_FORMAT,
           },
           {
             value: this.doomfiendHitsPerVolley,
-            valueDesignator: ' targets/volley',
+            valueDesignator: 'targets/volley',
             formatType: formatStatType.TO_FIXED_1,
           },
         ],
@@ -256,12 +256,12 @@ class T31AmirdrassilDemonology extends Analyzer {
         stats: [
           {
             value: this.doomBrandDamagePerExpire,
-            valueDesignator: ' dmg/brand',
+            valueDesignator: 'dmg/brand',
             formatType: formatStatType.TO_PRETTY,
           },
           {
-            value: this.doomBrand.damage,
-            valueDesignator: ' total dmg',
+            value: (this.doomBrand.damage * 1000) / this.owner.fightDuration,
+            valueDesignator: 'dps',
             formatType: formatStatType.TO_PRETTY,
           },
         ],
@@ -273,12 +273,12 @@ class T31AmirdrassilDemonology extends Analyzer {
         stats: [
           {
             value: this.doomfiendDamagePerSummon,
-            valueDesignator: ' dmg/doomfiend',
+            valueDesignator: 'dmg/doomfiend',
             formatType: formatStatType.TO_PRETTY,
           },
           {
-            value: this.doomfiend.damage,
-            valueDesignator: ' total dmg',
+            value: (this.doomfiend.damage * 1000) / this.owner.fightDuration,
+            valueDesignator: 'dps',
             formatType: formatStatType.TO_PRETTY,
           },
         ],

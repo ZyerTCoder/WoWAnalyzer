@@ -16,17 +16,17 @@ export function AddAbilitiesWithoutAnalyzers(stats: ComparisonStat[], combatant:
       stats: [
         {
           value: castEffic.casts,
-          valueDesignator: ' casts',
+          valueDesignator: 'casts',
           formatType: formatStatType.NO_FORMAT,
         },
         {
           value: castEffic.maxCasts - castEffic.casts,
-          valueDesignator: ' missed casts',
+          valueDesignator: 'missed casts',
           formatType: formatStatType.NO_FORMAT,
         },
         {
           value: castEffic.efficiency!,
-          valueDesignator: '% efficiency',
+          valueDesignator: 'efficiency',
           formatType: formatStatType.TO_PERCENT,
         },
       ],
@@ -44,12 +44,12 @@ export function AddAbilitiesWithoutAnalyzers(stats: ComparisonStat[], combatant:
       stats: [
         {
           value: castEffic.casts,
-          valueDesignator: ' casts',
+          valueDesignator: 'casts',
           formatType: formatStatType.NO_FORMAT,
         },
         {
           value: castEffic.efficiency!,
-          valueDesignator: '% efficiency',
+          valueDesignator: 'efficiency',
           formatType: formatStatType.TO_PERCENT,
         },
       ],

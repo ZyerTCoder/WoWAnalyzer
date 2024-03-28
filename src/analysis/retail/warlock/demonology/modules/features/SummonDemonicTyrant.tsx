@@ -489,12 +489,12 @@ class SummonDemonicTyrant extends Analyzer {
         stats: [
           {
             value: this.tyrantsCast,
-            valueDesignator: ' casts',
+            valueDesignator: 'casts',
             formatType: formatStatType.NO_FORMAT,
           },
           {
             value: Number(this.populatedEmpoweredDemonsTable[0]['Total']),
-            valueDesignator: ' demons',
+            valueDesignator: 'demons',
             formatType: formatStatType.TO_FIXED_1,
           },
         ],

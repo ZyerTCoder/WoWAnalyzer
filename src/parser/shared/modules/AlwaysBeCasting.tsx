@@ -305,7 +305,7 @@ class AlwaysBeCasting extends Analyzer {
         stats: [
           {
             value: this.downtimePercentage,
-            valueDesignator: '% downtime',
+            valueDesignator: 'downtime',
             formatType: formatStatType.TO_PERCENT,
           },
         ],

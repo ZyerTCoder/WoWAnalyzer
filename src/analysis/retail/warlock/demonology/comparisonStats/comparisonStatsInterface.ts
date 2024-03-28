@@ -26,13 +26,13 @@ export enum formatStatType {
 export function getFormattedStat(stat: SubStat) {
   switch (stat.formatType) {
     case formatStatType.NO_FORMAT:
-      return stat.value + stat.valueDesignator;
+      return stat.value + ' ' + stat.valueDesignator;
     case formatStatType.TO_FIXED_1:
-      return stat.value.toFixed(1) + stat.valueDesignator;
+      return stat.value.toFixed(1) + ' ' + stat.valueDesignator;
     case formatStatType.TO_PERCENT:
-      return formatPercentage(stat.value, 0) + stat.valueDesignator;
+      return formatPercentage(stat.value, 0) + '% ' + stat.valueDesignator;
     case formatStatType.TO_PRETTY:
-      return formatNumber(stat.value) + stat.valueDesignator;
+      return formatNumber(stat.value) + ' ' + stat.valueDesignator;
     default:
       return 'missing format';
   }
