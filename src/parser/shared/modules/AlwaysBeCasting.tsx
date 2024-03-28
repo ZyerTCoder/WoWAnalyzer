@@ -302,16 +302,13 @@ class AlwaysBeCasting extends Analyzer {
         icon: 'spell_mage_altertime',
         name: 'Downtime',
         sort: 0,
-        first: {
-          value: this.downtimePercentage,
-          valueDesignator: '% downtime',
-          formatType: formatStatType.TO_PERCENT,
-        },
-        second: {
-          value: this.activeTimePercentage,
-          valueDesignator: '% uptime',
-          formatType: formatStatType.TO_PERCENT,
-        },
+        stats: [
+          {
+            value: this.downtimePercentage,
+            valueDesignator: '% downtime',
+            formatType: formatStatType.TO_PERCENT,
+          },
+        ],
       },
     ];
     return data;

@@ -13,26 +13,23 @@ export function AddAbilitiesWithoutAnalyzers(stats: ComparisonStat[], combatant:
       icon: TALENTS.CALL_DREADSTALKERS_TALENT.icon,
       name: TALENTS.CALL_DREADSTALKERS_TALENT.name,
       sort: 2,
-      first: {
-        value: castEffic.casts,
-        valueDesignator: ' casts',
-        formatType: formatStatType.NO_FORMAT,
-      },
-      second: {
-        value: castEffic.maxCasts - castEffic.casts,
-        valueDesignator: ' missed casts',
-        formatType: formatStatType.NO_FORMAT,
-      },
-    });
-    stats.push({
-      icon: TALENTS.CALL_DREADSTALKERS_TALENT.icon,
-      name: TALENTS.CALL_DREADSTALKERS_TALENT.name,
-      sort: 2,
-      first: {
-        value: castEffic.efficiency!,
-        valueDesignator: '% efficiency',
-        formatType: formatStatType.TO_PERCENT,
-      },
+      stats: [
+        {
+          value: castEffic.casts,
+          valueDesignator: ' casts',
+          formatType: formatStatType.NO_FORMAT,
+        },
+        {
+          value: castEffic.maxCasts - castEffic.casts,
+          valueDesignator: ' missed casts',
+          formatType: formatStatType.NO_FORMAT,
+        },
+        {
+          value: castEffic.efficiency!,
+          valueDesignator: '% efficiency',
+          formatType: formatStatType.TO_PERCENT,
+        },
+      ],
     });
   }
 
@@ -44,16 +41,18 @@ export function AddAbilitiesWithoutAnalyzers(stats: ComparisonStat[], combatant:
       icon: TALENTS.BILESCOURGE_BOMBERS_TALENT.icon,
       name: TALENTS.BILESCOURGE_BOMBERS_TALENT.name,
       sort: 2,
-      first: {
-        value: castEffic.casts,
-        valueDesignator: ' casts',
-        formatType: formatStatType.NO_FORMAT,
-      },
-      second: {
-        value: castEffic.efficiency!,
-        valueDesignator: '% efficiency',
-        formatType: formatStatType.TO_PERCENT,
-      },
+      stats: [
+        {
+          value: castEffic.casts,
+          valueDesignator: ' casts',
+          formatType: formatStatType.NO_FORMAT,
+        },
+        {
+          value: castEffic.efficiency!,
+          valueDesignator: '% efficiency',
+          formatType: formatStatType.TO_PERCENT,
+        },
+      ],
     });
   }
 

@@ -37,7 +37,7 @@ function getTopPerformer(subStat: SubStat) {
     }
     return (
       <>
-        <td style={{ width: '12%' }}>
+        <td style={{ width: '15%' }}>
           <div className="flex performance-bar-container">
             <div
               className="flex-sub performance-bar"
@@ -62,23 +62,33 @@ function getTopPerformer(subStat: SubStat) {
 
 function entries(stats: ComparisonStat[]) {
   return stats.map((stat) => (
-    <tr key={stat.name}>
-      <td style={{ width: '25px' }}>
-        <Icon icon={stat.icon}></Icon>
-      </td>
-      <td style={{ width: '20%' }}>{stat.name}</td>
-      <td style={{ width: '12%' }}>{getFormattedStat(stat.first)}</td>
-      <td style={{ width: '12%' }}>{stat.second && getFormattedStat(stat.second)}</td>
-      {getTopPerformer(stat.first)}
-      {stat.second ? getTopPerformer(stat.second) : <td colSpan={2}></td>}
-    </tr>
+    <>
+      <tr key={stat.name + stat.sort + stat.stats[0].valueDesignator}>
+        <td style={{ width: '25px' }}>
+          <Icon icon={stat.icon}></Icon>
+        </td>
+        <td style={{ width: '25%' }}>{stat.name}</td>
+        <td style={{ width: '20%' }}>{getFormattedStat(stat.stats[0])}</td>
+        {getTopPerformer(stat.stats[0])}
+      </tr>
+      {stat.stats.length > 1 &&
+        stat.stats.slice(1).map((subStat) => (
+          <tr key={stat.name + stat.sort + subStat.valueDesignator}>
+            <td style={{ width: '25px' }} />
+            <td style={{ width: '25%' }} />
+            <td style={{ width: '20%' }}>{getFormattedStat(subStat)}</td>
+            {getTopPerformer(subStat)}
+          </tr>
+        ))}
+    </>
   ));
 }
 
 function addTopValues(stats: ComparisonStat[]): ComparisonStat[] {
   stats.forEach((stat) => {
-    stat.first.top = tempTopValues[stat.name + stat.first.valueDesignator];
-    stat.second && (stat.second.top = tempTopValues[stat.name + stat.second.valueDesignator]);
+    stat.stats.forEach((substat) => {
+      substat.top = tempTopValues[stat.name + substat.valueDesignator];
+    });
   });
   return stats;
 }
@@ -113,10 +123,10 @@ function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof Comba
         <table className="data-table" style={{ marginTop: 10, marginBottom: 10 }}>
           <tbody>
             <tr>
-              <th style={{ width: '25px' }} />
-              <th style={{ width: '15%' }}>Statistic</th>
-              <th colSpan={2}>Your performance</th>
-              <th colSpan={4}>Average top performance</th>
+              <th />
+              <th>Statistic</th>
+              <th>Your performance</th>
+              <th colSpan={2}>Average top performance</th>
             </tr>
             {entries(stats)}
           </tbody>
@@ -131,9 +141,8 @@ function ComparisonStatsTable({ modules, events, info }: GuideProps<typeof Comba
 
 function tempGetStatsString(stats: ComparisonStat[]) {
   const out: (string | number)[][] = [];
-  stats.forEach((stat) => out.push([stat.name + stat.first.valueDesignator, stat.first.value]));
-  stats.forEach(
-    (stat) => stat.second && out.push([stat.name + stat.second.valueDesignator, stat.second.value]),
+  stats.forEach((stat) =>
+    stat.stats.forEach((subStat) => out.push([stat.name + subStat.valueDesignator, subStat.value])),
   );
   console.error(out);
   return JSON.stringify(out);

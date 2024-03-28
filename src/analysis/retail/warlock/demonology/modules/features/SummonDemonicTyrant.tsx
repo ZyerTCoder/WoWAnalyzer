@@ -486,16 +486,18 @@ class SummonDemonicTyrant extends Analyzer {
         icon: SPELLS.SUMMON_DEMONIC_TYRANT.icon,
         name: SPELLS.SUMMON_DEMONIC_TYRANT.name,
         sort: 1,
-        first: {
-          value: this.tyrantsCast,
-          valueDesignator: ' casts',
-          formatType: formatStatType.NO_FORMAT,
-        },
-        second: {
-          value: Number(this.populatedEmpoweredDemonsTable[0]['Total']),
-          valueDesignator: ' demons',
-          formatType: formatStatType.TO_FIXED_1,
-        },
+        stats: [
+          {
+            value: this.tyrantsCast,
+            valueDesignator: ' casts',
+            formatType: formatStatType.NO_FORMAT,
+          },
+          {
+            value: Number(this.populatedEmpoweredDemonsTable[0]['Total']),
+            valueDesignator: ' demons',
+            formatType: formatStatType.TO_FIXED_1,
+          },
+        ],
       },
     ];
     return data;

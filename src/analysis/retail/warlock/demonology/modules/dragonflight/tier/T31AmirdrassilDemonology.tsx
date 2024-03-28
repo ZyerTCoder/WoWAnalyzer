@@ -209,76 +209,79 @@ class T31AmirdrassilDemonology extends Analyzer {
         icon: SPELLS.DOOM_BRAND_DEBUFF.icon,
         name: SPELLS.DOOM_BRAND_DEBUFF.name,
         sort: 4,
-        first: {
-          value: this.doomBrand.removeBuffCount,
-          valueDesignator: ' explosions',
-          formatType: formatStatType.NO_FORMAT,
-        },
-        second: {
-          value: this.doomBrandUptime,
-          valueDesignator: ' uptime',
-          formatType: formatStatType.TO_PERCENT,
-        },
-      },
-      {
-        icon: SPELLS.DOOM_BRAND_DEBUFF.icon,
-        name: SPELLS.DOOM_BRAND_DEBUFF.name,
-        sort: 4,
-        first: {
-          value: this.doomBrandHitsPerExpire,
-          valueDesignator: ' hits/brand',
-          formatType: formatStatType.TO_FIXED_1,
-        },
-        second: {
-          value: this.doomBrand.hits,
-          valueDesignator: ' hits',
-          formatType: formatStatType.NO_FORMAT,
-        },
+        stats: [
+          {
+            value: this.doomBrand.removeBuffCount,
+            valueDesignator: ' explosions',
+            formatType: formatStatType.NO_FORMAT,
+          },
+          {
+            value: this.doomBrandUptime,
+            valueDesignator: ' uptime',
+            formatType: formatStatType.TO_PERCENT,
+          },
+          {
+            value: this.doomBrandHitsPerExpire,
+            valueDesignator: ' hits/brand',
+            formatType: formatStatType.TO_FIXED_1,
+          },
+          {
+            value: this.doomBrand.hits,
+            valueDesignator: ' hits',
+            formatType: formatStatType.NO_FORMAT,
+          },
+        ],
       },
       {
         icon: SPELLS.DOOMFIEND_SUMMON.icon,
         name: SPELLS.DOOMFIEND_SUMMON.name,
         sort: 4,
-        first: {
-          value: this.doomfiend.summons,
-          valueDesignator: ' summons',
-          formatType: formatStatType.NO_FORMAT,
-        },
-        second: {
-          value: this.doomfiendHitsPerVolley,
-          valueDesignator: ' targets/volley',
-          formatType: formatStatType.TO_FIXED_1,
-        },
+        stats: [
+          {
+            value: this.doomfiend.summons,
+            valueDesignator: ' summons',
+            formatType: formatStatType.NO_FORMAT,
+          },
+          {
+            value: this.doomfiendHitsPerVolley,
+            valueDesignator: ' targets/volley',
+            formatType: formatStatType.TO_FIXED_1,
+          },
+        ],
       },
       {
         icon: SPELLS.DOOM_BRAND_DEBUFF.icon,
         name: SPELLS.DOOM_BRAND_DEBUFF.name,
         sort: 100,
-        first: {
-          value: this.doomBrandDamagePerExpire,
-          valueDesignator: ' dmg/brand',
-          formatType: formatStatType.TO_PRETTY,
-        },
-        second: {
-          value: this.doomBrand.damage,
-          valueDesignator: ' total dmg',
-          formatType: formatStatType.TO_PRETTY,
-        },
+        stats: [
+          {
+            value: this.doomBrandDamagePerExpire,
+            valueDesignator: ' dmg/brand',
+            formatType: formatStatType.TO_PRETTY,
+          },
+          {
+            value: this.doomBrand.damage,
+            valueDesignator: ' total dmg',
+            formatType: formatStatType.TO_PRETTY,
+          },
+        ],
       },
       {
         icon: SPELLS.DOOMFIEND_SUMMON.icon,
         name: SPELLS.DOOMFIEND_SUMMON.name,
         sort: 100,
-        first: {
-          value: this.doomfiendDamagePerSummon,
-          valueDesignator: ' dmg/doomfiend',
-          formatType: formatStatType.TO_PRETTY,
-        },
-        second: {
-          value: this.doomfiend.damage,
-          valueDesignator: ' total dmg',
-          formatType: formatStatType.TO_PRETTY,
-        },
+        stats: [
+          {
+            value: this.doomfiendDamagePerSummon,
+            valueDesignator: ' dmg/doomfiend',
+            formatType: formatStatType.TO_PRETTY,
+          },
+          {
+            value: this.doomfiend.damage,
+            valueDesignator: ' total dmg',
+            formatType: formatStatType.TO_PRETTY,
+          },
+        ],
       },
     ];
 

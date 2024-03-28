@@ -7,16 +7,13 @@ export interface SubStat {
   top?: number;
 }
 
+type NonEmpty<SubStat> = [SubStat, ...SubStat[]];
+
 export interface ComparisonStat {
   icon: string;
   sort: number;
   name: string;
-  first: SubStat;
-  second?: SubStat;
-}
-
-export interface HasComparisonStat {
-  comparisonStat: ComparisonStat[];
+  stats: NonEmpty<SubStat>;
 }
 
 export enum formatStatType {
@@ -39,6 +36,10 @@ export function getFormattedStat(stat: SubStat) {
     default:
       return 'missing format';
   }
+}
+
+export interface HasComparisonStat {
+  comparisonStat: ComparisonStat[];
 }
 
 export function instanceOfComparisonStat(object: any): object is HasComparisonStat {
