@@ -21,13 +21,19 @@ export const WHITELIST_ABILITIES = [
 
 /** Returns the Balance Druid's primary cooldown spell, which changes based on talent */
 export function cdSpell(c: Combatant): Spell {
-  return c.hasTalent(TALENTS_DRUID.INCARNATION_CHOSEN_OF_ELUNE_TALENT)
-    ? SPELLS.INCARNATION_CHOSEN_OF_ELUNE
-    : SPELLS.CELESTIAL_ALIGNMENT;
+  const hasIncarn = c.hasTalent(TALENTS_DRUID.INCARNATION_CHOSEN_OF_ELUNE_TALENT);
+  const hasOs = c.hasTalent(TALENTS_DRUID.ORBITAL_STRIKE_TALENT);
+  return hasIncarn
+    ? hasOs
+      ? SPELLS.INCARNATION_ORBITAL_STRIKE
+      : SPELLS.INCARNATION_CHOSEN_OF_ELUNE
+    : hasOs
+      ? SPELLS.CELESTIAL_ALIGNMENT_ORBITAL_STRIKE
+      : SPELLS.CELESTIAL_ALIGNMENT;
 }
 
-export const CA_DURATION = 20_000;
-export const INCARN_DURATION = 30_000;
+const CA_DURATION = 20_000;
+const INCARN_DURATION = 30_000;
 /** Returns the duration of Balance Druid's primary cooldown spell, which changes based on talent */
 export function cdDuration(c: Combatant): number {
   return c.hasTalent(TALENTS_DRUID.INCARNATION_CHOSEN_OF_ELUNE_TALENT)
@@ -51,8 +57,6 @@ export function currentEclipse(c: Combatant): 'none' | 'solar' | 'lunar' | 'both
 }
 
 export const GUIDE_CORE_EXPLANATION_PERCENT = 40;
-export const STARSURGE_ELUNES_GUIDANCE_DISCOUNT = 8;
-export const STARFALL_ELUNES_GUIDANCE_DISCOUNT = 10;
 export const STARSURGE_BASE_COST = 40;
 export const STARFALL_BASE_COST = 50;
 export const ASTRAL_POWER_SCALE_FACTOR = 0.1; // in events all values are x10

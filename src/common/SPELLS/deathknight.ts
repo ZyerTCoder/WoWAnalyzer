@@ -94,6 +94,18 @@ const spells = {
     name: 'Relish in Blood',
     icon: 'ability_deathknight_roilingblood',
   },
+  COAGULOPATHY_BUFF: {
+    id: 391477,
+    name: 'Coagulopathy',
+    icon: 'ability_skeer_bloodletting',
+  },
+
+  // Other
+  HEARTBREAKER_ENERGIZE: {
+    id: 210738,
+    name: 'Heartbreaker',
+    icon: 'spell_deathknight_deathstrike',
+  },
 
   // Frost:
 
@@ -452,6 +464,8 @@ const spells = {
     id: 43265,
     name: 'Death and Decay',
     icon: 'spell_shadow_deathanddecay',
+    runesCost: 1,
+    runicPowerCost: -10,
   },
 
   DEATH_AND_DECAY_BUFF: {
@@ -500,12 +514,6 @@ const spells = {
     id: 61999,
     name: 'Raise Ally',
     icon: 'spell_shadow_deadofnight',
-  },
-
-  RAISE_DEAD_BLOOD_FROST: {
-    id: 46585,
-    name: 'Raise Dead',
-    icon: 'inv_pet_ghoul',
   },
 
   DEATH_COIL: {

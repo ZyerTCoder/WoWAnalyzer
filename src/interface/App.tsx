@@ -16,6 +16,7 @@ import RouterErrorBoundary from 'interface/RouterErrorBoundary';
 import {
   AboutTab,
   CharacterTab,
+  DebugAnnotationsTab,
   DefaultTab,
   EventsTab,
   OverviewTab,
@@ -95,6 +96,7 @@ const appRoutes = createRoutesFromElements(
       <Route path="statistics" element={<StatisticsTab />} />
       <Route path="timeline" element={<TimelineTab />} />
       <Route path="events" element={<EventsTab />} />
+      <Route path="debug" element={<DebugAnnotationsTab />} />
       <Route path="character" element={<CharacterTab />} />
       <Route path="about" element={<AboutTab />} />
       <Route path=":resultTab" element={<DefaultTab />} />
@@ -114,11 +116,11 @@ const appRoutes = createRoutesFromElements(
   </Route>,
 );
 
-const sentryCreateBrowserRouter = process.env.SENTRY_DSN
+const sentryCreateBrowserRouter = import.meta.env.SENTRY_DSN
   ? wrapCreateBrowserRouter(createBrowserRouter)
   : createBrowserRouter;
 const router =
-  process.env.NODE_ENV === 'test'
+  import.meta.env.MODE === 'test'
     ? createMemoryRouter(appRoutes)
     : sentryCreateBrowserRouter(appRoutes);
 

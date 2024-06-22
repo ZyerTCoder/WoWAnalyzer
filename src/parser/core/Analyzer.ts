@@ -1,15 +1,18 @@
 import * as React from 'react';
 
 import type { Suggestion } from './CombatLogParser';
-import EventFilter, { SELECTED_PLAYER, SELECTED_PLAYER_PET } from './EventFilter';
+import EventFilter from './EventFilter';
 import Events, { AnyEvent, EventType } from './Events';
 import EventSubscriber, { EventListener, Options as _Options } from './EventSubscriber';
 import { Info, Metric } from './metric';
 import Module from './Module';
 import { When } from './ParseResults';
 import { MessageDescriptor } from '@lingui/core';
+import type { Annotation } from './modules/DebugAnnotations';
+import DebugAnnotations from './modules/DebugAnnotations';
 
-export { SELECTED_PLAYER, SELECTED_PLAYER_PET };
+export const SELECTED_PLAYER = 1;
+export const SELECTED_PLAYER_PET = 2;
 export type Options = _Options;
 
 export interface ParseResultsTab {
@@ -18,7 +21,7 @@ export interface ParseResultsTab {
   render: () => React.ReactNode;
 }
 
-type Dependencies = typeof Module['dependencies'];
+type Dependencies = (typeof Module)['dependencies'];
 
 class Analyzer extends EventSubscriber {
   /**
@@ -36,6 +39,17 @@ class Analyzer extends EventSubscriber {
     listener: EventListener<ET, E>,
   ) {
     super.addEventListener(eventFilter, listener);
+  }
+
+  /**
+   * Add an annotation which will be displayed on the /debug view. Multiple annotations
+   * can be added to the same event.
+   *
+   * Annotations are automatically broken down by analyzer. You don't need to split them
+   * up yourself.
+   */
+  addDebugAnnotation(event: AnyEvent, annotation: Annotation): void {
+    this.owner.getModule(DebugAnnotations)?.addAnnotation(this, event, annotation);
   }
 
   // Override these with functions that return info about their rendering in the specific slots
@@ -122,11 +136,11 @@ export function withDependencies<TBase extends AnalyzerConstructor, D extends De
 
 type ConstructedDependency<T> = T extends new (options: Options) => infer R ? R : never;
 
-export type InjectedDependencies<Deps extends Dependencies> = {
+type InjectedDependencies<Deps extends Dependencies> = {
   [Key in keyof Deps]: ConstructedDependency<Deps[Key]>;
 };
 
-export enum FunctionType {
+enum FunctionType {
   Statistic,
   Suggestion,
 }

@@ -14,7 +14,6 @@ import {
   MASTERY_STACK_BUFF_IDS,
   TRIPLE_MASTERY_BENEFIT_IDS,
 } from 'analysis/retail/druid/restoration/constants';
-import { specMasteryCoefficient } from 'game/SPECS';
 
 const DEBUG = false;
 
@@ -303,7 +302,7 @@ class Mastery extends Analyzer {
         this.statTracker.ratingNeededForNextPercentage(
           this.statTracker.currentMasteryRating,
           this.statTracker.statBaselineRatingPerPercent[STAT.MASTERY],
-          specMasteryCoefficient(this.selectedCombatant.spec),
+          this.selectedCombatant.spec?.masteryCoefficient,
         );
       return buffBonus / healMasteryMult;
     };
@@ -320,12 +319,12 @@ class Mastery extends Analyzer {
 /**
  * A mapping from spell guid to the MasteryAttribution for that spell
  */
-export type MasteryAttributionsBySpell = { [key: number]: MasterySpellAttribution };
+type MasteryAttributionsBySpell = { [key: number]: MasterySpellAttribution };
 
 /**
  * A HoT's mastery attribution.
  */
-export class MasterySpellAttribution {
+class MasterySpellAttribution {
   direct: number; // the direct healing from the HoT, should be same as entry in WCL. Includes benefit from own stack of Mastery.
   mastery: { [key: number]: number }; // a mapping from spell ID to how much this HoT boosted it via Mastery.
 
@@ -346,12 +345,12 @@ export class MasterySpellAttribution {
 /**
  * A mapping from buff guid to the attribution amount for that buff
  */
-export type MasteryAttributionsByBuff = { [key: number]: MasteryBuffAttribution };
+type MasteryAttributionsByBuff = { [key: number]: MasteryBuffAttribution };
 
 /**
  * A Buff's mastery attribution.
  */
-export class MasteryBuffAttribution {
+class MasteryBuffAttribution {
   attributable: number; // the amount of healing attributable to the buff
   buffAmount: number; // the amount of mastery rating the buff provides
 
@@ -364,7 +363,7 @@ export class MasteryBuffAttribution {
 /**
  * A instance of healing that has been decomposed into parts based on Mastery attribution
  */
-export interface DecomposedHeal {
+interface DecomposedHeal {
   /** The amount of effective healing that would have been done before being boosted by mastery */
   noMastery: number;
   /** The amount of effective heal added per stack of mastery */

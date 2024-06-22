@@ -19,7 +19,6 @@ import EnemiesHealth from 'parser/shared/modules/EnemiesHealth';
 import Haste from 'parser/shared/modules/Haste';
 import ManaValues from 'parser/shared/modules/ManaValues';
 import StatTracker from 'parser/shared/modules/StatTracker';
-import EnergizeCompat from 'parser/shared/normalizers/EnergizeCompat';
 import * as React from 'react';
 import { ExplanationContextProvider } from 'interface/guide/components/Explanation';
 
@@ -79,6 +78,7 @@ import { EventListener } from './EventSubscriber';
 import Fight from './Fight';
 import { Info } from './metric';
 import Module, { Options } from './Module';
+import DebugAnnotations from './modules/DebugAnnotations';
 import Abilities from './modules/Abilities';
 import Auras from './modules/Auras';
 import EventEmitter from './modules/EventEmitter';
@@ -112,11 +112,16 @@ import Dreambinder from 'parser/retail/modules/items/dragonflight/Dreambinder';
 import Iridal from 'parser/retail/modules/items/dragonflight/Iridal';
 import BelorrelosTheSuncaller from 'parser/retail/modules/items/dragonflight/BelorrelosTheSuncaller';
 import NymuesUnravelingSpindle from 'parser/retail/modules/items/dragonflight/NymuesUnravelingSpindle';
+import EnduringDreadplate, {
+  EnduringDreadplateEventLinkNormalizer,
+} from 'parser/retail/modules/items/dragonflight/EnduringDreadplate';
+import { FyralathNormalizer } from 'parser/shared/normalizers/FyralathNormalizer';
+import FriendlyCompatNormalizer from './FriendlyCompatNormalizer';
 
 // This prints to console anything that the DI has to do
 const debugDependencyInjection = false;
 const MAX_DI_ITERATIONS = 100;
-const isMinified = process.env.NODE_ENV === 'production';
+const isMinified = import.meta.env.PROD;
 
 type DependencyDefinition = typeof Module | readonly [typeof Module, { [option: string]: any }];
 export type DependenciesDefinition = { [desiredName: string]: DependencyDefinition };
@@ -135,18 +140,6 @@ export interface Suggestion {
   recommended?: React.ReactNode;
 }
 
-interface Talent {
-  id: number;
-}
-export interface Player {
-  id: number;
-  name: string;
-  talents: Talent[];
-  artifact: unknown;
-  gear: unknown;
-  auras: unknown;
-}
-
 class CombatLogParser {
   static internalModules: DependenciesDefinition = {
     fightEndNormalizer: FightEndNormalizer,
@@ -155,7 +148,9 @@ class CombatLogParser {
     deathDowntime: DeathDowntime,
     totalDowntime: TotalDowntime,
     spellInfo: SpellInfo,
-    energizeCompat: EnergizeCompat,
+    enemies: Enemies,
+    friendlyCompat: FriendlyCompatNormalizer,
+    debugAnnotations: DebugAnnotations,
   };
   static defaultModules: DependenciesDefinition = {
     // Normalizers
@@ -176,7 +171,6 @@ class CombatLogParser {
     throughputStatisticGroup: ThroughputStatisticGroup,
     deathTracker: DeathTracker,
 
-    enemies: Enemies,
     enemiesHealth: EnemiesHealth,
     pets: Pets,
     spellManaCost: SpellManaCost,
@@ -237,6 +231,9 @@ class CombatLogParser {
     iridal: Iridal,
     belorrelosTheSuncaller: BelorrelosTheSuncaller,
     nymuesUnravelingSpindle: NymuesUnravelingSpindle,
+    enduringDreadplateNormalizer: EnduringDreadplateEventLinkNormalizer,
+    enduringDreadplate: EnduringDreadplate,
+    fyralathNormalizer: FyralathNormalizer,
 
     // Enchants
     burningDevotion: BurningDevotion,
@@ -416,7 +413,6 @@ class CombatLogParser {
     // eslint-disable-next-line new-cap
     const module = new moduleClass(fullOptions);
     Module.applyDependencies(fullOptions, module);
-    // TODO: Remove module naming
     module.key = desiredModuleName;
     this._modules[desiredModuleName] = module;
     return module;
@@ -461,7 +457,7 @@ class CombatLogParser {
             desiredModuleName,
           );
         } catch (e) {
-          if (process.env.NODE_ENV !== 'production') {
+          if (!import.meta.env.PROD) {
             throw e;
           }
           this.disabledModules[ModuleError.INITIALIZATION].push({
@@ -762,7 +758,7 @@ class CombatLogParser {
             }
           } catch (e) {
             //error occurred during results generation of module, disable module and all modules depending on it
-            if (process.env.NODE_ENV !== 'production') {
+            if (!import.meta.env.PROD) {
               throw e;
             }
             this.deepDisable(module, ModuleError.RESULTS, e as Error);

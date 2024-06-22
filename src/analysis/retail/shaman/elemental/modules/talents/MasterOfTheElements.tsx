@@ -2,14 +2,14 @@ import SPELLS from 'common/SPELLS';
 import TALENTS from 'common/TALENTS/shaman';
 import { isTalent } from 'common/TALENTS/types';
 import { SpellLink } from 'interface';
-import Analyzer, { Options } from 'parser/core/Analyzer';
+import Analyzer, { Options, SELECTED_PLAYER } from 'parser/core/Analyzer';
 import { calculateEffectiveDamage } from 'parser/core/EventCalculateLib';
-import { SELECTED_PLAYER } from 'parser/core/EventFilter';
 import Events, { CastEvent, DamageEvent } from 'parser/core/Events';
 import ItemDamageDone from 'parser/ui/ItemDamageDone';
 import Statistic from 'parser/ui/Statistic';
 import { STATISTIC_ORDER } from 'parser/ui/StatisticBox';
 import TalentSpellText from 'parser/ui/TalentSpellText';
+import { addEnhancedCastReason } from 'parser/core/EventMetaLib';
 
 const MASTER_OF_THE_ELEMENTS = {
   INCREASE: 0.2,
@@ -91,8 +91,7 @@ class MasterOfTheElements extends Analyzer {
     }
     this.moteConsumptionTimestamp = event.timestamp;
     this.moteActivationTimestamp = null;
-    event.meta = event.meta || {};
-    event.meta.isEnhancedCast = true;
+    addEnhancedCastReason(event);
     this.moteBuffedAbilities[event.ability.guid] += 1;
   }
 

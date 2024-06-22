@@ -18,6 +18,7 @@ import DungeonPullSelector from './DungeonPullSelector';
 
 import './Header.scss';
 import { useLingui } from '@lingui/react';
+import { currentExpansion } from 'game/GameBranch';
 
 interface Props {
   config: Config;
@@ -40,7 +41,7 @@ interface Props {
 }
 
 const Header = ({
-  config: { spec, builds, expansion },
+  config: { spec, builds, branch },
   build,
   player: { name, icon },
   fight,
@@ -61,11 +62,15 @@ const Header = ({
   const { i18n } = useLingui();
 
   let playerThumbnail;
-  if (characterProfile?.thumbnail) {
+  if (characterProfile?.thumbnail?.startsWith('https')) {
+    playerThumbnail = characterProfile.thumbnail;
+  } else if (characterProfile?.thumbnail) {
     playerThumbnail = `https://render-${characterProfile.region}.worldofwarcraft.com/character/${characterProfile.thumbnail}`;
   } else {
     playerThumbnail = `/specs/${icon}.jpg`.replace(/ /, '');
   }
+
+  const expansion = currentExpansion(branch);
 
   return (
     <header>

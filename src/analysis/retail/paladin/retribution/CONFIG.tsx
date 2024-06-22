@@ -1,5 +1,5 @@
 import { Juko8, Klamuz, Skeletor, ToppleTheNun } from 'CONTRIBUTORS';
-import Expansion from 'game/Expansion';
+import GameBranch from 'game/GameBranch';
 import SPECS from 'game/SPECS';
 import Config from 'parser/Config';
 
@@ -7,7 +7,7 @@ import CHANGELOG from './CHANGELOG';
 
 const config: Config = {
   contributors: [ToppleTheNun, Klamuz, Juko8, Skeletor],
-  expansion: Expansion.Dragonflight,
+  branch: GameBranch.Retail,
   patchCompatibility: '10.1.7',
   isPartial: true,
   description: (
@@ -54,7 +54,7 @@ const config: Config = {
     import('./CombatLogParser' /* webpackChunkName: "RetributionPaladin" */).then(
       (exports) => exports.default,
     ),
-  path: __dirname,
+  path: import.meta.url,
 };
 
 export default config;
