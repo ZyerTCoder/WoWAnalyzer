@@ -250,6 +250,16 @@ export enum ResourceActor {
   Target = 2,
 }
 
+/**
+ * Event meta information filled in by various modules.
+ */
+export interface EventMeta {
+  isInefficientCast?: boolean;
+  inefficientCastReason?: React.ReactNode;
+  isEnhancedCast?: boolean;
+  enhancedCastReason?: React.ReactNode;
+}
+
 export type AbilityEvent<T extends string> = Event<T> & { ability: Ability };
 export type SourcedEvent<T extends string> = Event<T> & {
   sourceID: number;
@@ -418,12 +428,7 @@ export interface BeginChannelEvent extends Event<EventType.BeginChannel> {
   targetIsFriendly: boolean;
   classResources?: Array<ClassResources & { cost: number }>;
   // Added by any module, used in the timeline
-  meta?: {
-    isInefficientCast?: boolean;
-    inefficientCastReason?: React.ReactNode;
-    isEnhancedCast?: boolean;
-    enhancedCastReason?: React.ReactNode;
-  };
+  meta?: EventMeta;
   trigger?: AnyEvent;
   globalCooldown?: GlobalCooldownEvent;
 }
@@ -471,12 +476,7 @@ export interface BaseCastEvent<T extends string> extends Event<T> {
   // Added by the GlobalCooldown module
   globalCooldown?: GlobalCooldownEvent;
   // Added by any module, used in the timeline
-  meta?: {
-    isInefficientCast?: boolean;
-    inefficientCastReason?: React.ReactNode;
-    isEnhancedCast?: boolean;
-    enhancedCastReason?: React.ReactNode;
-  };
+  meta?: EventMeta;
 }
 
 export type CastEvent = BaseCastEvent<EventType.Cast>;
@@ -788,6 +788,7 @@ export interface InterruptEvent extends Event<EventType.Interrupt> {
 
 export interface DeathEvent extends Event<EventType.Death> {
   killingAbility?: Ability;
+  targetInstance?: number;
   source: CastTarget;
   sourceIsFriendly: boolean;
   targetID: number;
@@ -1038,6 +1039,12 @@ export interface Item {
   effectID?: number;
   permanentEnchant?: number;
   temporaryEnchant?: number;
+  /**
+   * An enchant that provides an activatable ability.
+   *
+   * Only seen it used on Cata Engineering "enchants".
+   */
+  onUseEnchant?: number;
   gems?: Gem[];
   setID?: number;
 

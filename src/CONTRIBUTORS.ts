@@ -2406,3 +2406,21 @@ export const Saeldur: Contributor = {
   github: 'Saeldur',
   discord: 'saeldur',
 };
+export const Lspinheiro: Contributor = {
+  nickname: 'Lspinheiro',
+  github: 'lspinheiro',
+  discord: 'lspinheiro',
+  mains: [
+    {
+      name: 'Gromlash',
+      spec: SPECS.RESTORATION_SHAMAN,
+      link: 'https://worldofwarcraft.blizzard.com/en-us/character/us/khazgoroth/gromlash',
+    },
+  ],
+};
+
+export const Bhahlou: Contributor = {
+  nickname: 'Bhahlou',
+  github: 'Bhahlou',
+  discord: 'Bhahlou',
+};

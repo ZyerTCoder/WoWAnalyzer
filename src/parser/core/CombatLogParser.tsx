@@ -78,6 +78,7 @@ import { EventListener } from './EventSubscriber';
 import Fight from './Fight';
 import { Info } from './metric';
 import Module, { Options } from './Module';
+import DebugAnnotations from './modules/DebugAnnotations';
 import Abilities from './modules/Abilities';
 import Auras from './modules/Auras';
 import EventEmitter from './modules/EventEmitter';
@@ -114,6 +115,7 @@ import NymuesUnravelingSpindle from 'parser/retail/modules/items/dragonflight/Ny
 import EnduringDreadplate, {
   EnduringDreadplateEventLinkNormalizer,
 } from 'parser/retail/modules/items/dragonflight/EnduringDreadplate';
+import { FyralathNormalizer } from 'parser/shared/normalizers/FyralathNormalizer';
 import FriendlyCompatNormalizer from './FriendlyCompatNormalizer';
 
 // This prints to console anything that the DI has to do
@@ -148,6 +150,7 @@ class CombatLogParser {
     spellInfo: SpellInfo,
     enemies: Enemies,
     friendlyCompat: FriendlyCompatNormalizer,
+    debugAnnotations: DebugAnnotations,
   };
   static defaultModules: DependenciesDefinition = {
     // Normalizers
@@ -230,6 +233,7 @@ class CombatLogParser {
     nymuesUnravelingSpindle: NymuesUnravelingSpindle,
     enduringDreadplateNormalizer: EnduringDreadplateEventLinkNormalizer,
     enduringDreadplate: EnduringDreadplate,
+    fyralathNormalizer: FyralathNormalizer,
 
     // Enchants
     burningDevotion: BurningDevotion,
@@ -266,7 +270,6 @@ class CombatLogParser {
   player: PlayerInfo;
   playerPets: PetInfo[];
   fight: Fight;
-  build?: string;
   boss: Boss | null;
   combatantInfoEvents: CombatantInfoEvent[];
 
@@ -317,14 +320,12 @@ class CombatLogParser {
     selectedFight: Fight,
     combatantInfoEvents: CombatantInfoEvent[],
     characterProfile: CharacterProfile,
-    build?: string,
   ) {
     this.config = config;
     this.report = report;
     this.player = selectedPlayer;
     this.playerPets = report.friendlyPets.filter((pet) => pet.petOwner === selectedPlayer.id);
     this.fight = selectedFight;
-    this.build = build;
     this.combatantInfoEvents = combatantInfoEvents;
     // combatantinfo events aren't included in the regular events, but they're still used to analysis. We should have them show in the history to make it complete.
     combatantInfoEvents.forEach((event) => this.eventHistory.push(event));
@@ -409,7 +410,6 @@ class CombatLogParser {
     // eslint-disable-next-line new-cap
     const module = new moduleClass(fullOptions);
     Module.applyDependencies(fullOptions, module);
-    // TODO: Remove module naming
     module.key = desiredModuleName;
     this._modules[desiredModuleName] = module;
     return module;

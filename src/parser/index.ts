@@ -38,6 +38,7 @@ import DevastationEvoker from 'analysis/retail/evoker/devastation';
 import PreservationEvoker from 'analysis/retail/evoker/preservation';
 import AugmentationEvoker from 'analysis/retail/evoker/augmentation';
 // Classic
+import ClassicDeathKnightBlood from 'analysis/classic/deathknight/blood';
 import ClassicDeathKnightFrost from 'analysis/classic/deathknight/frost';
 import ClassicDeathKnightUnholy from 'analysis/classic/deathknight/unholy';
 import ClassicDruidBalance from 'analysis/classic/druid/balance';
@@ -52,11 +53,14 @@ import ClassicPaladinProtection from 'analysis/classic/paladin/protection';
 import ClassicPaladinRetribution from 'analysis/classic/paladin/retribution';
 import ClassicPriestDiscipline from 'analysis/classic/priest/discipline';
 import ClassicPriestShadow from 'analysis/classic/priest/shadow';
+import ClassicPriestHoly from 'analysis/classic/priest/holy';
 import ClassicRogueAssassination from 'analysis/classic/rogue/assassination';
+import ClassicShamanElemental from 'analysis/classic/shaman/elemental';
 import ClassicShamanEnhancement from 'analysis/classic/shaman/enhancement';
 import ClassicShamanRestoration from 'analysis/classic/shaman/restoration';
 import ClassicWarlockAffliction from 'analysis/classic/warlock/affliction';
 import ClassicWarlockDemonology from 'analysis/classic/warlock/demonology';
+import ClassicWarlockDestruction from 'analysis/classic/warlock/destruction';
 import ClassicFuryWarrior from 'analysis/classic/warrior/fury';
 
 import Config from './Config';
@@ -115,6 +119,7 @@ const configs: Config[] = [
   FuryWarrior,
 
   // Classic
+  ClassicDeathKnightBlood,
   ClassicDeathKnightFrost,
   ClassicDeathKnightUnholy,
 
@@ -134,14 +139,17 @@ const configs: Config[] = [
 
   ClassicPriestDiscipline,
   ClassicPriestShadow,
+  ClassicPriestHoly,
 
   ClassicRogueAssassination,
 
+  ClassicShamanElemental,
   ClassicShamanEnhancement,
   ClassicShamanRestoration,
 
   ClassicWarlockAffliction,
   ClassicWarlockDemonology,
+  ClassicWarlockDestruction,
 
   ClassicFuryWarrior,
 ];
