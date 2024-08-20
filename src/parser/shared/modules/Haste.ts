@@ -3,6 +3,8 @@ import SPELLS from 'common/SPELLS';
 import CLASSIC_SPELLS from 'common/SPELLS/classic';
 import { TALENTS_DEATH_KNIGHT, TALENTS_MAGE, TALENTS_PRIEST } from 'common/TALENTS';
 import BLOODLUST_BUFFS from 'game/BLOODLUST_BUFFS';
+import GameBranch from 'game/GameBranch';
+import { wclGameVersionToBranch } from 'game/VERSIONS';
 import Analyzer, { Options, SELECTED_PLAYER } from 'parser/core/Analyzer';
 import Combatant from 'parser/core/Combatant';
 import EventFilter from 'parser/core/EventFilter';
@@ -32,7 +34,7 @@ interface HasteBuff {
 
 type HasteBuffMap = { [spellId: number]: number | HasteBuff };
 
-export const DEFAULT_HASTE_BUFFS: HasteBuffMap = {
+const DEFAULT_HASTE_BUFFS: HasteBuffMap = {
   // HASTE RATING BUFFS ARE HANDLED BY THE STATTRACKER MODULE
 
   ...BLOODLUST_BUFFS,
@@ -61,7 +63,10 @@ export const DEFAULT_HASTE_BUFFS: HasteBuffMap = {
   [SPELLS.CELESTIAL_ALIGNMENT.id]: 0.1,
   [SPELLS.INCARNATION_CHOSEN_OF_ELUNE.id]: 0.1,
   [SPELLS.NATURES_GRACE.id]: 0.15,
-  [SPELLS.FRANTIC_MOMENTUM.id]: 0.1, // TODO check for possible tuning updates
+  [SPELLS.FRANTIC_MOMENTUM.id]: 0.1,
+  [SPELLS.CENARIUS_MIGHT_BUFF.id]: 0.1,
+  [SPELLS.SAVAGE_FURY_BUFF.id]: 0.1,
+  // Guardian Berserk handled in spec module
   //endregion
 
   //region Hunter Haste Buffs
@@ -84,6 +89,18 @@ export const DEFAULT_HASTE_BUFFS: HasteBuffMap = {
   //region Mage
   [TALENTS_MAGE.ICY_VEINS_TALENT.id]: 0.3,
   [TALENTS_MAGE.TOME_OF_ANTONIDAS_TALENT.id]: 0.02,
+  [SPELLS.FIRE_MASTERY_BUFF.id]: {
+    hastePerStack: 0.01,
+  },
+  [SPELLS.MANA_ADDICTION_BUFF_FIRE.id]: {
+    hastePerStack: 0.02,
+  },
+  [SPELLS.MANA_ADDICTION_BUFF_ARCANE.id]: {
+    hastePerStack: 0.03,
+  },
+  [SPELLS.ARCANE_TEMPO_BUFF.id]: {
+    hastePerStack: 0.02,
+  },
   //endregion
 
   //region Monk
@@ -97,15 +114,24 @@ export const DEFAULT_HASTE_BUFFS: HasteBuffMap = {
   [SPELLS.ELEMENTAL_BLAST_HASTE.id]: 0.03,
   //endregion
 
-  //region CLASSIC
-  // Warlock
-  [CLASSIC_SPELLS.DARK_INTENT_HASTE.id]: 0.03,
-  //endregion
-
   //region Encounter
   //Raids
   [SPELLS.ASTRAL_FLARE_BUFF.id]: { hastePerStack: 0.05 }, // Sarkareth
   //endregion
+
+  //region CLASSIC
+  // Raids
+  [CLASSIC_SPELLS.CORRUPTION_ABSOLUTE.id]: 1, // Cho'gall
+  [CLASSIC_SPELLS.ESSENCE_OF_THE_RED.id]: 1, // Sinestra
+  // Druid
+  [CLASSIC_SPELLS.MOONKIN_AURA.id]: 0.05,
+  // Warlock
+  [CLASSIC_SPELLS.DARK_INTENT_HASTE.id]: 0.03,
+  //endregion
+};
+
+const CLASSIC_HASTE_BUFF_OVERRIDES: HasteBuffMap = {
+  [SPELLS.BERSERKING.id]: 0.2,
 };
 
 class Haste extends Analyzer {
@@ -117,9 +143,19 @@ class Haste extends Analyzer {
   protected statTracker!: StatTracker;
   protected eventEmitter!: EventEmitter;
 
-  protected hasteBuffs: HasteBuffMap = {
-    ...DEFAULT_HASTE_BUFFS,
-  };
+  private defaultHasteBuffs = DEFAULT_HASTE_BUFFS;
+
+  protected hasteBuffOverrides: HasteBuffMap = {};
+
+  protected getHasteBuff(spellId: number): HasteBuff | number | undefined {
+    const override = this.hasteBuffOverrides[spellId];
+
+    if (override !== undefined) {
+      return override;
+    }
+
+    return this.defaultHasteBuffs[spellId];
+  }
 
   get changehaste() {
     return new EventFilter(EventType.ChangeHaste);
@@ -129,6 +165,11 @@ class Haste extends Analyzer {
 
   constructor(options: Options) {
     super(options);
+
+    if (wclGameVersionToBranch(options.owner.report.gameVersion) === GameBranch.Classic) {
+      this.defaultHasteBuffs = Object.assign({}, DEFAULT_HASTE_BUFFS, CLASSIC_HASTE_BUFF_OVERRIDES);
+    }
+
     this.current = (options.statTracker as StatTracker).currentHastePercentage;
     debug && console.log(`Haste: Starting haste: ${formatPercentage(this.current)}%`);
     this.eventEmitter = options.eventEmitter as EventEmitter;
@@ -152,7 +193,7 @@ class Haste extends Analyzer {
     /** Either a haste rating percentage (10% = 0.1), or a {@link HasteBuff} object. */
     haste: number | HasteBuff,
   ): void {
-    this.hasteBuffs[spellId] = haste;
+    this.hasteBuffOverrides[spellId] = haste;
   }
 
   onApplyBuff(event: ApplyBuffEvent) {
@@ -263,7 +304,7 @@ class Haste extends Analyzer {
    * Gets the base Haste gain for the provided spell.
    */
   _getBaseHasteGain(spellId: number) {
-    const hasteBuff = this.hasteBuffs[spellId] || undefined;
+    const hasteBuff = this.getHasteBuff(spellId);
 
     if (typeof hasteBuff === 'number') {
       // A regular number is a static Haste percentage
@@ -301,7 +342,7 @@ class Haste extends Analyzer {
   }
 
   _getHastePerStackGain(spellId: number) {
-    const hasteBuff = this.hasteBuffs[spellId] || undefined;
+    const hasteBuff = this.getHasteBuff(spellId);
 
     if (typeof hasteBuff === 'number') {
       // hasteBuff being a number is shorthand for static haste only

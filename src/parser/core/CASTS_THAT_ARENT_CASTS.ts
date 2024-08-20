@@ -10,6 +10,7 @@ const spells: number[] = [
    * into their abilities and so forth
    */
   SPELLS.MELEE.id, // Auto attack
+  SPELLS.AUTO_SHOT.id, // hunter auto attack (classic)
   SPELLS.CHI_BURST_HEAL.id, // this is the "tick" when you hit a player, the actual cast has a different id
   SPELLS.REFRESHING_JADE_WIND_HEAL.id, // this is the "tick" when you hit a player, the actual cast has a different id
   SPELLS.SHADOWY_APPARITION.id,
@@ -21,8 +22,7 @@ const spells: number[] = [
   SPELLS.MUTILATE_OFFHAND.id, // Mutilate off hand
   SPELLS.DIVINE_HYMN_HEAL.id, //The heal component of divine hymn
   SPELLS.CHARGE_2.id, // The damage component of charge
-  SPELLS.CLOUDBURST_TOTEM_RECALL.id, // Cloudburst reactivation
-  TALENTS_SHAMAN.SPIRITWALKERS_GRACE_TALENT.id,
+  SPELLS.BLOOD_ELF_ILLUSION.id, // Orb of the Sin'dorei
 
   //region Boss abilities
   SPELLS.RIONTHUS_DISINTEGRATE.id, // targeted player is shown as 'casting' this spell
@@ -90,6 +90,12 @@ const spells: number[] = [
   SPELLS.RECLAMATION_CAST.id,
   //endregion
 
+  //region shaman
+  SPELLS.CLOUDBURST_TOTEM_RECALL.id, // Cloudburst reactivation
+  TALENTS_SHAMAN.SPIRITWALKERS_GRACE_TALENT.id,
+  SPELLS.FERAL_LUNGE_NOT_A_CAST.id, // duplicate event of regular Feral Lunge cast
+  //endregion
+
   //region warlock
   CLASSIC_SPELLS.RAIN_OF_FIRE_DAMAGE.id,
   //endregion
@@ -101,6 +107,18 @@ const spells: number[] = [
   SPELLS.RAMPAGE_4.id,
   SPELLS.HACK_AND_SLASH.id,
   SPELLS.WRATH_AND_FURY.id,
+  //endregion
+
+  //region classic hunter
+  CLASSIC_SPELLS.LOCK_AND_LOAD.id,
+  //endregion
+
+  //region classic priest
+  CLASSIC_SPELLS.MIND_SEAR_TICK.id,
+  //endregion
+
+  //region classic warrior
+  CLASSIC_SPELLS.BLADESTORM_TRIGGERED_SPELL.id,
   //endregion
 
   //region trinket

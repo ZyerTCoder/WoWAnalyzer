@@ -13,6 +13,7 @@ import {
   ACCEPTABLE_BERSERK_CPS,
   ACCEPTABLE_CPS,
   cdSpell,
+  FB_SPELLS,
   FEROCIOUS_BITE_ENERGY,
   FEROCIOUS_BITE_MAX_DRAIN,
   getAcceptableCps,
@@ -46,10 +47,7 @@ class FerociousBite extends Analyzer {
 
     this.hasSotf = this.selectedCombatant.hasTalent(TALENTS_DRUID.SOUL_OF_THE_FOREST_FERAL_TALENT);
 
-    this.addEventListener(
-      Events.cast.by(SELECTED_PLAYER).spell(SPELLS.FEROCIOUS_BITE),
-      this.onFbCast,
-    );
+    this.addEventListener(Events.cast.by(SELECTED_PLAYER).spell(FB_SPELLS), this.onFbCast);
   }
 
   onFbCast(event: CastEvent) {
@@ -66,7 +64,7 @@ class FerociousBite extends Analyzer {
 
     const duringBerserkAndSotf =
       this.hasSotf &&
-      (this.selectedCombatant.hasBuff(SPELLS.BERSERK.id) ||
+      (this.selectedCombatant.hasBuff(SPELLS.BERSERK_CAT.id) ||
         this.selectedCombatant.hasBuff(TALENTS_DRUID.INCARNATION_AVATAR_OF_ASHAMANE_TALENT.id));
     const extraEnergyUsed = getAdditionalEnergyUsed(event);
     const maxExtraEnergy = getFerociousBiteMaxDrain(this.selectedCombatant);
